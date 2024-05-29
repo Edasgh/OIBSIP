@@ -10,8 +10,8 @@ const orderModel=mongoose.Schema(
         items:{type:[
           {
             name:{type:String,required:true},
-            category:{type:String,required:true},
-            variant:{type:String,required:true},
+            category:{type:String,required:true}, // veg or non-veg
+            variant:{type:String,required:true}, //size
             quantity:{type:Number,required:true},
             price:{type:Number,required:true}, 
           }

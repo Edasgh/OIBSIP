@@ -2,7 +2,6 @@ const async_handler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config();
-
 const jwt_secret = process.env.JWT_SECRET;
 
 const fetchUser = async_handler(async (req, res, next) => {
@@ -23,4 +22,4 @@ const fetchUser = async_handler(async (req, res, next) => {
 })
 
 
-module.exports = fetchUser ;
+module.exports = fetchUser;

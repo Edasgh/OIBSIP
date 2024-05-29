@@ -2,7 +2,7 @@ const mongoose=require("mongoose");
 
 const productModel=mongoose.Schema(
     {
-        name :{type:String,required:true},
+        name :{type:String,required:true,unique:true},
         product_type:{type:Number,required:true},
         // 0-> Pizza , 1-> Pizza Crust , 2-> Pizza Sauce , 3-> Pizza Toppings , 4->Cheese
         variants :{ type: [
@@ -10,7 +10,7 @@ const productModel=mongoose.Schema(
               name: { type: String, required: true },
               price: { type: Number, required: true },
             },
-        ]},// 3 variants : Small (400rs) , Medium (550rs) , Full (750rs)
+        ]},// 3 variants : 0. Small (400rs) , 1. Medium (550rs) , 2. Full (750rs)
         prices:{type:[Number],required:true},  
         quantity:{type:Number,required:true},
         description:{type:String,required:true},

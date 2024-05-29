@@ -95,7 +95,6 @@ const updateUser = async_handler(async (req, res) => {
 
     } catch (error) {
         res.status(401);
-        console.log(error);
         throw new Error("Can't view user details");
     }
 })
