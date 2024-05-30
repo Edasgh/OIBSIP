@@ -11,7 +11,10 @@ const orderModel=mongoose.Schema(
           {
             name:{type:String,required:true},
             category:{type:String,required:true}, // veg or non-veg
-            variant:{type:String,required:true}, //size
+            variant:{type:{
+              name : {type:String,required:true},
+              price : {type:Number,required:true}
+            },required:true}, //size ||  0-> Small , 1-> Medium, 2-> Full
             quantity:{type:Number,required:true},
             price:{type:Number,required:true}, 
           }
@@ -19,7 +22,7 @@ const orderModel=mongoose.Schema(
         ],required:true},
         address:{type:String,required:true},
         totalPrice:{type:Number,required:true},
-        status:{type:Number,default:0}
+        status:{type:Number,default:0} // 0-> Order Placed , 1-> Packed , 2-> Out for delivery , 3->Delivered
     },
     {timestamps : true}
 )

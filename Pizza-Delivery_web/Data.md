@@ -1,4 +1,8 @@
 Data and Design Source : https://www.dominos.co.in/menu/veg-pizzas
+Navbar Bg-col : #D2411E
+
+Razorpay Tutorial : https://github.com/meabhisingh/RazorPayTutorial
+
 
 Types of pizzas:
 1. Veg Pizza :
