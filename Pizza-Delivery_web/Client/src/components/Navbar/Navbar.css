@@ -21,6 +21,9 @@
 .navbar-links_container {
     display: flex;
     justify-content: center;
+
+
+    z-index: 4;
 }
 
 .navbar-user-actions{
@@ -28,6 +31,8 @@
     gap: .8rem;
     justify-content: flex-end;
     align-items: center;
+
+    z-index: 4;
 }
 
 .navbar-links_container p,
@@ -72,6 +77,8 @@
     border:none;
     border-radius: .5rem;
     box-shadow: 1px 1px 4px #bf6954,-1px -1px 4px #bc6854;
+
+    z-index: 4;
 }
 
 .navbar-menu_container p {
@@ -122,7 +129,7 @@
     background: #fff7f7;
     position: absolute;
     padding: 2rem;
-    top: 3rem;
+    top: 3.3rem;
     right: 8rem;
     margin-top: 1rem;
     min-width: 10rem;
@@ -181,7 +188,7 @@
         top: 1.688rem;
     }
     .navbar-menu_account_container {
-        top: 12rem;
+        top: 12.9rem;
         right: 7rem;
     }
 
