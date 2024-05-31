@@ -1,0 +1,46 @@
+.carousel {
+    height: calc(100vh - 80px);
+    width: calc(100vw - 18px);
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel > .container {
+    width: 600vw;
+    height: 100%;
+    display: flex;
+    transition: all 1s ease;
+}
+
+.carousel > .container > img {
+    width: 100vw;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.carousel > .icons {
+    width: fit-content;
+    position: absolute;
+    display: flex;
+    right: 0;
+    left: 0;
+    gap: 20px;
+    bottom: 100px;
+    margin: auto;
+}
+
+.carousel > .icons > .icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid white;
+    color: white;
+}
+
+.carousel > .icons > .icon:hover {
+    background-color: #D2411E;
+}
