@@ -16,9 +16,9 @@ const instance = new Razorpay({
 //function to place an order by a single logged in user
 const placeOrder = async_handler(async (req, res) => {
     try {
-        let { items, address } = req.body;
         let customerId, totalPrice, paymentDone;
-        paymentDone = false;
+        let { items, address } = req.body;
+        paymentDone = true;
         const userId = req.user.id; // will be used as customerId
         const user = await User.findById(userId).select("-password");
         if (user) {
@@ -31,6 +31,14 @@ const placeOrder = async_handler(async (req, res) => {
                 }
 
                 items[i].price = (items[i].variant.price) * (items[i].quantity);
+
+                if (items[i].extraOptions) {
+
+                    for (let j = 0; j < items[i].extraOptions.length; j++) {
+                        items[i].price += (items[i].extraOptions[j].price) * (items[i].quantity);
+
+                    }
+                }
 
                 totalPrice += items[i].price;
             }

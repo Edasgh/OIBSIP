@@ -15,6 +15,14 @@ const orderModel=mongoose.Schema(
               name : {type:String,required:true},
               price : {type:Number,required:true}
             },required:true}, //size ||  0-> Small , 1-> Medium, 2-> Full
+            extraOptions:{
+              type: [
+                {
+                  name: { type: String, required: true },//extra cheeses or sauces
+                  price: { type: Number, required: true },
+                },
+            ]
+            },
             quantity:{type:Number,required:true},
             price:{type:Number,required:true}, 
           }

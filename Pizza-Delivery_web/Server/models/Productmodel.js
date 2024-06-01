@@ -11,6 +11,14 @@ const productModel=mongoose.Schema(
               price: { type: Number, required: true },
             },
         ]},// 3 variants : 0. Small (400rs) , 1. Medium (550rs) , 2. Full (750rs)
+        extraOptions:{
+            type: [
+                {
+                  name: { type: String, required: true },//extra cheeses or sauces
+                  price: { type: Number, required: true },
+                },
+            ]
+        },
         prices:{type:[Number],required:true},  
         quantity:{type:Number,required:true},
         description:{type:String,required:true},
