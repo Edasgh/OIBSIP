@@ -39,7 +39,7 @@
 .navbar-user-actions p,
 .navbar-menu_container p ,
 .navbar-menu_account_container p { /* new addition here */
-    color: #000000;
+    color:var(--text-colora);
 
     font-size: 1.063rem;
     font-weight: 500;
@@ -91,18 +91,12 @@
 
 
 
-.user-icon,
-.cart-icon,
-.pizza-icon {
-    color: #D2411E;
-    cursor: pointer;
-}
 
 
 .navbar-logo {
     font-size: 1.45rem;
     cursor: pointer;
-    color: #000000;
+    color:var(--text-colora);
 }
 
 .menu-bar,
@@ -138,7 +132,7 @@
     box-shadow: 1px 1px 4px #bf6954,-1px -1px 4px #bc6854;
 }
 .navbar-menu_account_container p {
-    color: #000000;
+    color: var(--text-colora);
 
     font-size: 1rem;
     line-height: 1.57rem;

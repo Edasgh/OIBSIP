@@ -10,7 +10,6 @@ const port = process.env.PORT;
 const AuthRoutes = require("./routes/AuthRoutes");
 const OrderRoutes = require("./routes/OrderRoutes");
 const ProductRoutes = require("./routes/ProductRoutes");
-const fetchUser = require("./middlewares/authMiddlewares");
 
 
 app.use(cors());

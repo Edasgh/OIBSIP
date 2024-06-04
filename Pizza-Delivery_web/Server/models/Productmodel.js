@@ -16,10 +16,11 @@ const productModel=mongoose.Schema(
                 {
                   name: { type: String, required: true },//extra cheeses or sauces
                   price: { type: Number, required: true },
+                  category:{type:String,required:true}
                 },
             ]
         },
-        prices:{type:[Number],required:true},  
+        price:{type:Number,required:true},  
         quantity:{type:Number,required:true},
         description:{type:String,required:true},
         category:{type:String,required:true},

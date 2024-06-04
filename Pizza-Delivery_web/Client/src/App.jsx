@@ -11,6 +11,15 @@ It also enables the v6.4 data APIs like loaders, actions, fetchers and more. */
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import Home from "./pages/Home/Home";
+import Product from "./pages/Product/Product";
+import AddProduct from "./components/Dashboard/AddProduct/AddProduct";
+import Login from "./components/Auth/Login/Login";
+import SignUp from "./components/Auth/SignUp/SignUp";
+import ProfileNav from "./components/Dashboard/ProfileNav/ProfileNav";
+import Profile from "./components/Dashboard/Profile/Profile";
+import Cart from "./components/Dashboard/Cart/Cart";
+import Orders from "./components/Dashboard/Orders/Orders";
+
 
 const Layout = () => {
   return (
@@ -18,6 +27,19 @@ const Layout = () => {
       <Navbar />
       <Outlet />
       <Footer />
+    </>
+  )
+}
+
+const DashboardLayOut=()=>{
+  return(
+    <>
+    <div className="profile-div flex-container">
+      <ProfileNav/>
+        <div className="profile-div-content">
+          <Outlet/>
+        </div>
+      </div>
     </>
   )
 }
@@ -31,6 +53,40 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <Home />
+      },
+      {
+        path: "/product",
+        element: <Product />
+      },
+      {
+        path: "/login",
+        element: <Login />
+      },
+      {
+        path: "/signup",
+        element: <SignUp />
+      },
+      {
+        path: "/profile_dashboard",
+        element: <DashboardLayOut/> ,
+        children:[
+          {
+            path:"",
+            element:<Profile/>
+          },
+          {
+            path:"/profile_dashboard/cart",
+            element:<Cart/>
+          },
+          {
+            path:"/profile_dashboard/orders",
+            element:<Orders/>
+          },
+          {
+            path:"/profile_dashboard/add_product",
+            element:<AddProduct/>
+          }
+        ]
       }
     ],
   },

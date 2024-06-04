@@ -2,6 +2,7 @@
 .header-part {
     height: calc(100vh - 80px);
     width: calc(100vw - 18px);
+    background-size: cover;
     position: relative;
     overflow: hidden;
 }
@@ -9,8 +10,8 @@
 .header-part > .container {
     width: 600vw;
     height: 100%;
+    background-size: cover;
     display: flex;
-    transition: all 1s ease;
 }
 
 
@@ -19,6 +20,8 @@
     height: 100%;
     background-size: cover;
     object-fit: cover;
+    position: relative;
+    z-index: -99;
 }
 
 .header_text {
@@ -50,7 +53,7 @@
     background: none;
     border: 2px solid #FF4820;
     padding: 1.5rem 2.8rem;
-    color: #fff;
+    color: var(--text-colorb);
     cursor: pointer;
     outline: none;
     border-radius: .5rem;
@@ -71,7 +74,7 @@
 }
 
 .header_text-container h1{
-    color:#fff;
+    color: var(--text-colorb);
 }
 
 

@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 
 const Header = () => {
 
-  const headerBG ="https://images.pexels.com/photos/5175556/pexels-photo-5175556.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load";
+  const headerBG =
+    "https://images.pexels.com/photos/5175556/pexels-photo-5175556.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load";
 
   return (
     <>

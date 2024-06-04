@@ -14,12 +14,13 @@ const orderModel=mongoose.Schema(
             variant:{type:{
               name : {type:String,required:true},
               price : {type:Number,required:true}
-            },required:true}, //size ||  0-> Small , 1-> Medium, 2-> Full
+            },required:true}, //size
             extraOptions:{
               type: [
                 {
                   name: { type: String, required: true },//extra cheeses or sauces
                   price: { type: Number, required: true },
+                  category:{type:String,required:true}
                 },
             ]
             },
@@ -30,7 +31,7 @@ const orderModel=mongoose.Schema(
         ],required:true},
         address:{type:String,required:true},
         totalPrice:{type:Number,required:true},
-        status:{type:Number,default:0} // 0-> Order Placed , 1-> Packed , 2-> Out for delivery , 3->Delivered
+        status:{type:Number,default:0} // 0-> Order Placed , 1-> In the Kitchen , 2-> Out for delivery , 3->Delivered
     },
     {timestamps : true}
 )

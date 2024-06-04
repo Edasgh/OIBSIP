@@ -3,6 +3,9 @@ import { useState } from 'react';
 import { Link } from "react-router-dom";
 import "./Navbar.css";
 
+const token = localStorage.getItem("token");
+const isAdminTrue = localStorage.getItem("isAdmin-true");
+
 const Menu = () => {
     return (
         <>
@@ -19,22 +22,39 @@ const Menu = () => {
     );
 };
 
-const UserMenu=({handleClick,display})=>{
-    return(
+const UserMenu = ({ handleClick, display }) => {
+    return (
         <div className='user-account-menu  navbar-menu_account_container poppins-medium' style={{ display: `${display}` }}>
+
+            {token ? (
+                <>
                     <p onClick={handleClick}>
-                        <Link to="/" >SignUP</Link>
+                        <Link to="/profile_dashboard">My Account</Link>
+                    </p>
+
+                    <p
+                        onClick={() => {
+                            localStorage.removeItem("token");
+                            window.location.reload();
+                            handleClick();
+                        }}>
+
+                        <Link>LogOut</Link>
+                    </p>
+                </>
+            ) : (
+                <>
+
+                    <p onClick={handleClick}>
+                        <Link to="/signup" >SignUP</Link>
                     </p>
                     <p onClick={handleClick}>
-                        <Link to="/" >LogIn</Link>
+                        <Link to="/login" >LogIn</Link>
                     </p>
-                    <p onClick={handleClick}>
-                        <Link to="#my_account">My Account</Link>
-                    </p>
-                    <p onClick={handleClick}>
-                        <Link to="#logout">LogOut</Link>
-                    </p>
-                </div>
+                </>
+            )}
+
+        </div>
     )
 }
 
@@ -72,7 +92,7 @@ const Navbar = () => {
             <div className="navbar-user-actions">
                 <i className="fa-solid fa-circle-user user-icon" onClick={handleOpenUserMenu}></i>
                 <UserMenu display={display} handleClick={() => { setOpenUserMenu(false) }} />
-                <Link to="/"><i className="fa-solid fa-cart-shopping  cart-icon"></i></Link>
+                <Link to="/profile_dashboard/cart"><i className="fa-solid fa-cart-shopping  cart-icon"></i></Link>
             </div>
             <div className="navbar-menu">
                 {toggleMenu ? (
@@ -89,7 +109,7 @@ const Navbar = () => {
                             <div className="navbar-menu_container-links-user-actions">
                                 <i className="fa-solid fa-circle-user user-icon" onClick={handleOpenUserMenu}></i>
                                 <UserMenu display={display} handleClick={() => { setOpenUserMenu(false) }} />
-                                <Link to="/"><i className="fa-solid fa-cart-shopping  cart-icon"></i></Link>
+                                <Link to="/profile_dashboard/cart"><i className="fa-solid fa-cart-shopping  cart-icon"></i></Link>
                             </div>
                         </div>
                     </div>

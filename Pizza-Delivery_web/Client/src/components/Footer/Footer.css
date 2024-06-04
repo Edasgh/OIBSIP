@@ -3,7 +3,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: #D2411E;
+    background: var(--color-primary);
 
     padding: 4rem 6rem;
     margin: 0;
@@ -37,7 +37,7 @@
 
 
 .footer-links_main p {
-    color: #fff;
+    color: var(--text-colorb);
 
     word-spacing: 0.094rem;
     letter-spacing: 0.075rem;
@@ -52,7 +52,7 @@
 
 .footer-links_div h4,
 p {
-    color: #fff;
+    color: var(--text-colorb);
 
 }
 
@@ -86,7 +86,7 @@ p {
 }
 
 .footer-pizza-icon {
-    color: #fff;
+    color: var(--text-colorb);
 }
 
 .footer-logo {

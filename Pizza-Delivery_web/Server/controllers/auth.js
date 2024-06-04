@@ -33,7 +33,8 @@ const registerUser = async_handler(async (req, res) => {
             _id: newUser._id,
             name: newUser.name,
             email: newUser.email,
-            address: newUser.address
+            address: newUser.address,
+            success:true
 
         })
 
@@ -54,8 +55,8 @@ const loginUser = async_handler(async (req, res) => {
             name: user.name,
             email: user.email,
             address: user.address,
-            isAdmin: user.isAdmin,
-            token: generateToken(user._id)
+            token: generateToken(user._id),
+            success:true
         })
     } else {
         res.status(400);
