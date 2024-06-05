@@ -69,13 +69,13 @@ const OrderCard = () => {
         <hr />
     <div className="flex-container" style={{margin:"1rem"}}>
     <div className="total-price-div" style={{fontSize:"1.7rem"}} >
-      <p className='poppins-medium' style={{color:"var(--text-colora)"}}>Total Price : </p>
-      <p className='poppins-medium' style={{color:"var(--color-view)"}}>1440 rs</p>
+      <p className='poppins-semibold' style={{color:"var(--text-colora)"}}>Total Price : </p>
+      <p className='poppins-bold' style={{color:"var(--color-view)"}}>1440 rs</p>
     </div>
   
       <div className="user-address" style={{width:"12rem",padding:".7rem",border:"1px solid grey"}}>
-     <span className='poppins-medium'>Address :</span> 
-     <p style={{color:"var(--text-colora)"}}>123dsp colony , gt villa, khidirpur, suvam apartment</p>
+     <span className='poppins-medium' style={{fontSize:"1.3rem"}}>Address :</span> 
+     <p style={{color:"var(--text-colora)",fontSize:"1.1rem"}}>123dsp colony , gt villa, khidirpur, suvam apartment</p>
      </div>
 
      <div className="buttons-container order-card-btn-container"  style={{display:"flex",flexDirection:"column"}}>

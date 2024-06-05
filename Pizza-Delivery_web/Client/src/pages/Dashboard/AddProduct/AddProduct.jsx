@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom"
 import { variantsArr, SaucesArr, toppingsArr, product_types, categories } from '../../../data';
-import axios from "axios"
-import "./AddProduct.css";
+import "../../../AddProduct_EditProduct.css";
 
 
 const isAdmin = localStorage.getItem("isAdmin");

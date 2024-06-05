@@ -38,6 +38,14 @@
     }
 }
 
+#update-product-btn{
+    background-color: var(--color-update);
+    
+    &:hover{
+        background-color: var(--color-update-hover);
+    }
+}
+
 textarea {
     height: 148px;
     resize: none;

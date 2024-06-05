@@ -15,10 +15,12 @@ import Product from "./pages/Product/Product";
 import AddProduct from "./components/Dashboard/AddProduct/AddProduct";
 import Login from "./components/Auth/Login/Login";
 import SignUp from "./components/Auth/SignUp/SignUp";
-import ProfileNav from "./components/Dashboard/ProfileNav/ProfileNav";
-import Profile from "./components/Dashboard/Profile/Profile";
-import Cart from "./components/Dashboard/Cart/Cart";
-import Orders from "./components/Dashboard/Orders/Orders";
+import ProfileNav from "./pages/Dashboard/ProfileNav/ProfileNav";
+import Profile from "./pages/Dashboard/Profile/Profile";
+import Cart from "./pages/Dashboard/Cart/Cart";
+import Orders from "./pages/Dashboard/Orders/Orders";
+import Edit_Product from "./pages/Dashboard/Edit_Product/Edit_Product";
+import View_Products from "./pages/Dashboard/View_Products/View_Products";
 
 
 const Layout = () => {
@@ -85,7 +87,15 @@ const router = createBrowserRouter([
           {
             path:"/profile_dashboard/add_product",
             element:<AddProduct/>
-          }
+          },
+          {
+            path:"/profile_dashboard/view_products",
+            element:<View_Products/>
+          },
+          {
+            path:"/profile_dashboard/edit_product",
+            element:<Edit_Product/>
+          },
         ]
       }
     ],

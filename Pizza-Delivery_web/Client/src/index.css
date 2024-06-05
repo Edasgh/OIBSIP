@@ -304,6 +304,8 @@ textarea {
   margin:.5rem;
 }
 
+
+
 .item-details ul li {
   font-size: 1rem;
 }
@@ -332,16 +334,18 @@ textarea {
 
 @media screen and (max-width:480px) {
 
-  .cart-img,
-  .order-img {
+  .cart-img{
     width: 45vw;
+  }
+
+  .order-card .item-details ul li{
+    font-size: .8rem;
   }
 }
 
 @media screen and (min-width:481px) and (max-width:800px) {
 
-  .cart-img,
-  .order-img {
+  .cart-img {
     width: 30vw;
   }
 
