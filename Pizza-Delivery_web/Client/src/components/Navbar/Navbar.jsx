@@ -2,11 +2,15 @@ import React from 'react'
 import { useState } from 'react';
 import { Link } from "react-router-dom";
 import "./Navbar.css";
+import { useSelector } from 'react-redux';
 
 const token = localStorage.getItem("token");
-const isAdminTrue = localStorage.getItem("isAdmin-true");
+
 
 const Menu = () => {
+ 
+
+
     return (
         <>
             <p>
@@ -59,6 +63,8 @@ const UserMenu = ({ handleClick, display }) => {
 }
 
 const Navbar = () => {
+    const {data:products,totalPrice,totalItems,status}=useSelector((state)=>state.cart);
+
     const [toggleMenu, setToggleMenu] = useState(false);
     const [openUserMenu, setOpenUserMenu] = useState(false);
     const handleOpenUserMenu = () => {
@@ -92,7 +98,7 @@ const Navbar = () => {
             <div className="navbar-user-actions">
                 <i className="fa-solid fa-circle-user user-icon" onClick={handleOpenUserMenu}></i>
                 <UserMenu display={display} handleClick={() => { setOpenUserMenu(false) }} />
-                <Link to="/profile_dashboard/cart"><i className="fa-solid fa-cart-shopping  cart-icon"></i></Link>
+                <Link to="/profile_dashboard/cart"><i className="fa-solid fa-cart-shopping  cart-icon"></i>({totalItems})</Link>
             </div>
             <div className="navbar-menu">
                 {toggleMenu ? (
@@ -109,7 +115,7 @@ const Navbar = () => {
                             <div className="navbar-menu_container-links-user-actions">
                                 <i className="fa-solid fa-circle-user user-icon" onClick={handleOpenUserMenu}></i>
                                 <UserMenu display={display} handleClick={() => { setOpenUserMenu(false) }} />
-                                <Link to="/profile_dashboard/cart"><i className="fa-solid fa-cart-shopping  cart-icon"></i></Link>
+                                <Link to="/profile_dashboard/cart"><i className="fa-solid fa-cart-shopping  cart-icon"></i>({totalItems})</Link>
                             </div>
                         </div>
                     </div>

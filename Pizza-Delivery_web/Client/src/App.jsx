@@ -12,7 +12,7 @@ import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import Home from "./pages/Home/Home";
 import Product from "./pages/Product/Product";
-import AddProduct from "./components/Dashboard/AddProduct/AddProduct";
+import AddProduct from "./pages/Dashboard/AddProduct/AddProduct";
 import Login from "./components/Auth/Login/Login";
 import SignUp from "./components/Auth/SignUp/SignUp";
 import ProfileNav from "./pages/Dashboard/ProfileNav/ProfileNav";
@@ -21,6 +21,9 @@ import Cart from "./pages/Dashboard/Cart/Cart";
 import Orders from "./pages/Dashboard/Orders/Orders";
 import Edit_Product from "./pages/Dashboard/Edit_Product/Edit_Product";
 import View_Products from "./pages/Dashboard/View_Products/View_Products";
+import Edit_Details from "./pages/Dashboard/Edit_Details/Edit_Details";
+import Change_password from "./pages/Dashboard/Edit_Details/Change_password";
+import ForgotPassword from "./components/Auth/Login/ForgotPassword";
 
 
 const Layout = () => {
@@ -57,12 +60,16 @@ const router = createBrowserRouter([
         element: <Home />
       },
       {
-        path: "/product",
+        path: "/:productId/product",
         element: <Product />
       },
       {
         path: "/login",
         element: <Login />
+      },
+      {
+        path: "/forgot_password",
+        element: <ForgotPassword />
       },
       {
         path: "/signup",
@@ -75,6 +82,14 @@ const router = createBrowserRouter([
           {
             path:"",
             element:<Profile/>
+          },
+          {
+            path:"/profile_dashboard/:userId/edit_details",
+            element:<Edit_Details/>
+          },
+          {
+            path:"/profile_dashboard/:userId/change_password",
+            element:<Change_password/>
           },
           {
             path:"/profile_dashboard/cart",
@@ -93,10 +108,13 @@ const router = createBrowserRouter([
             element:<View_Products/>
           },
           {
-            path:"/profile_dashboard/edit_product",
+            path:"/profile_dashboard/:productId/edit_product",
             element:<Edit_Product/>
           },
         ]
+      },{
+        path:"/change_password",
+        element:<Change_password/>
       }
     ],
   },

@@ -2,36 +2,29 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom"
 import { variantsArr, SaucesArr, toppingsArr, product_types, categories } from '../../../data';
 import "../../../AddProduct_EditProduct.css";
+import axios from 'axios';
 
-
-const isAdmin = localStorage.getItem("isAdmin");
 const token = localStorage.getItem("token");
 
 const AddProduct = () => {
 
-  useEffect(() => {
-    if(!token){
-      navigate("/login");
-    }else{
-      if(isAdmin==false){
-        navigate("/");
-        alert("Action not allowed!");
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState(" ");
+  const [quantity, setQuantity] = useState(20);
+  const [price, setPrice] = useState(null);
+  const [imgLink, setImgLink] = useState(" ");
+  const [variants, setVariants] = useState([]);
+  const [extraOptions, setExtraOptions] = useState([]);
+  const [Product_type, setProduct_type] = useState(0);
+  const [category, setCategory] = useState(categories[0]);
 
-      }
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
     }
   }, []);
-  
 
-  const [product, setProduct] = useState({
-    name: "",
-    description: "",
-    quantity: null,
-    price: null,
-    imgLink: ""
-
-  })
-
-  const [variants, setVariants] = useState([]);
 
   const handleChooseVariant = (e, variant) => {
     if (e.target.checked) {
@@ -43,58 +36,80 @@ const AddProduct = () => {
 
   }
 
-  const [extraOptions, setExtraOptions] = useState([]);
+
   const handleChooseExtraOptions = (e, option) => {
     if (e.target.checked) {
       setExtraOptions([...extraOptions, { name: option.name, category: option.category, price: option.price }]);
+
     } else {
       extraOptions.pop();
     }
 
   }
 
-  const [product_type, setProduct_type] = useState("Pizza");
-  const [category, setCategory] = useState("Veg");
-
 
   const navigate = useNavigate()
-  const handleChange = (e) => {
-    setProduct((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-  }
+
 
   const handleSubmit = async (e) => {
-    setProduct({ ...product, product_type, variants, extraOptions, category });
     e.preventDefault();
-    console.log(product);
-    // try {
-    //   await axios.post("http://localhost:8080/api/product/create", product);
-    //   alert("Product created successfully!");
-    //   navigate("/");
-    // } catch (error) {
-    //   console.log(error);
-    //   alert("Something went wrong!");
-    // }
+    if (product_types[Product_type] !== "Pizza") {
+      setExtraOptions([]);
+    }
+    if (product_types[Product_type] !== "Pizza" || product_types[Product_type] !== "Pizza Crust") {
+      setVariants([]);
+    }
+
+    try {
+      await axios.post("http://localhost:8080/api/product/create", {
+        name,
+        product_type: Product_type,
+        variants: [...variants],
+        extraOptions: [...extraOptions],
+        price,
+        quantity,
+        description,
+        category,
+        image:imgLink
+      },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "auth-token": localStorage.getItem("token")
+          }
+        }
+
+      );
+      alert("Product created successfully!");
+      navigate("/profile_dashboard/view_products");
+    } catch (error) {
+      console.log(error);
+      alert("Something went wrong!");
+    }
+
   }
+
+
 
 
   return (
-    <div style={{width:"100%"}}>
+    <div style={{ width: "100%" }}>
       <h1 className='poppins-semibold section-title form-title'>Add a New Product</h1>
       <form className='form' id="addProduct"
-       onSubmit={handleSubmit}
+        onSubmit={handleSubmit}
       >
-        <input type="text" name="name" id="name" placeholder='Product Name' onChange={handleChange} required />
-        <textarea name="description" id="description" placeholder='Product Description' onChange={handleChange} required></textarea>
+        <input type="text" name="name" id="name" placeholder='Product Name' onChange={(e) => { setName(e.target.value) }} required />
+        <textarea name="description" id="description" placeholder='Product Description' onChange={(e) => { setDescription(e.target.value) }} required></textarea>
         <div className="option" id='product_type-option-container'>
           <label htmlFor="product_type">Product Type : </label>
           <select name="product_type" id="product_type" onChange={(e) => { setProduct_type(e.target.value) }}>
             {product_types.map(product_type => (
-              <option value={product_type} key={`product_type-${product_types.indexOf(product_type)}`} >{product_type}</option>
+              <option value={product_types.indexOf(product_type)} key={`product_type-${product_types.indexOf(product_type)}`} >{product_type}</option>
             ))}
           </select>
         </div>
         {/* Variant & extraoptions */}
-        {(product_type == "Pizza" || product_type == "Pizza Crust") ? (
+        {(product_types[Product_type] == "Pizza" || product_types[Product_type] == "Pizza Crust") ? (
           <>
             <hr />
             <div className='variants-container' >
@@ -122,7 +137,7 @@ const AddProduct = () => {
           <hr />
         )}
 
-        {(product_type == "Pizza") ? (
+        {(product_types[Product_type] == "Pizza") ? (
           <>
             <hr />
             <div className='extraOptions-container' >
@@ -178,9 +193,9 @@ const AddProduct = () => {
             ))}
           </select>
         </div>
-        <input type="number" name="quantity" id="quantity" placeholder='Product Quantity' onChange={handleChange} required min={1} />
-        <input type="number" name="price" id="price" placeholder='$ Price' onChange={handleChange} required min={1} />
-        <input type="text" name="imgLink" id="imgLink" placeholder='Product Image Link' onChange={handleChange} />
+        <input type="number" name="quantity" id="quantity" placeholder='Product Quantity' onChange={(e) => { setQuantity(e.target.value) }} required min={1} />
+        <input type="number" name="price" id="price" placeholder='$ Price' onChange={(e) => { setPrice(e.target.value) }} required min={1} />
+        <input type="text" name="imgLink" id="imgLink" placeholder='Product Image Link' onChange={(e) => { setImgLink(e.target.value) }} />
         <button type="submit">Add Product</button>
       </form>
     </div>

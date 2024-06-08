@@ -19,7 +19,6 @@ const Login = () => {
             }),
         });
         const json = await response.json();
-        console.log(json);
         if (json.success) {
             localStorage.setItem("token", json.token);
             alert("Logged in successfully!")
@@ -89,7 +88,7 @@ const Login = () => {
                 </div>
                 <hr />
                 <div className="form-flex">
-                    <Link to="/">Forgot Password?</Link>
+                    <Link to="/forgot_password">Forgot Password?</Link>
                     <p>
                         Don't have an account ? <Link to="/signup"> Create here</Link>
                     </p>

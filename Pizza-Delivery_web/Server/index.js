@@ -15,6 +15,7 @@ const ProductRoutes = require("./routes/ProductRoutes");
 app.use(cors());
 app.use(express.json());
 
+
 app.use("/api/user", AuthRoutes);
 app.use("/api/order", OrderRoutes); 
 app.use("/api/product", ProductRoutes);

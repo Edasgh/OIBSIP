@@ -13,13 +13,17 @@ const fetchUser = async_handler(async (req, res, next) => {
     }
 
     try {
-        const data = await jwt.verify(token, jwt_secret);
-        req.user = await data;
-        next();
+        const data = jwt.verify(token, jwt_secret);
+        req.user = data;
+        if (data) {
+            next();
+        }
+        if(res.headersSent){
+            console.log("headers sent")
+        }
     } catch (error) {
         res.status(401).send({ error: "Please authenticate using a valid token" });
     }
 })
 
-
-module.exports = fetchUser;
+module.exports=fetchUser;

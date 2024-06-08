@@ -27,7 +27,6 @@ const productSlice = createSlice({
         })
 
         .addCase(fetchProducts.fulfilled,(state,action)=>{
-            
             state.data=action.payload
             state.status=STATUSES.IDLE
             
@@ -50,7 +49,7 @@ export default productSlice.reducer;
 
 //function to fetch products
 export const fetchProducts=createAsyncThunk("products/fetch",async()=>{
-    const response = await fetch("https://fakestoreapi.com/products");
+    const response = await fetch("http://localhost:8080/api/product/view_products");
     const data = await response.json();
     return data;
 })

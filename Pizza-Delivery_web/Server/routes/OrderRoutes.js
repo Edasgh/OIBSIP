@@ -1,5 +1,5 @@
 const express = require("express");
-const fetchUser = require("../middlewares/authMiddlewares");
+const fetchUser = require("../middlewares/fetchUser");
 const { placeOrder, viewOrder, viewAllOrders, updateOrderStatus, deleteOrder } = require("../controllers/order");
 const router = express.Router();
 

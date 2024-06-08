@@ -74,6 +74,8 @@ a {
 }
 
 
+
+
 .login-signup-form {
   position: relative;
   width: 37%;
@@ -129,6 +131,8 @@ a {
 .login-signup-form input[type="text"],
 .login-signup-form input[type="email"],
 .login-signup-form input[type="password"],
+.form input[type="password"],
+.form input[type="email"],
 .login-signup-form textarea {
   width: 100%;
   font-size: 1.1rem;
@@ -142,7 +146,7 @@ textarea {
   resize: none;
 }
 
-.login-signup-form button[type="submit"] {
+.login-signup-form button[type="submit"] ,.login-signup-form button[type="button"]{
   padding: 0.4rem;
   font-size: 1.1rem;
   cursor: pointer;
@@ -168,6 +172,23 @@ textarea {
   background-color: var(--color-view-hover);
 }
 
+#edit-details-btn{
+  background-color: var(--color-update);
+
+}
+
+#edit-details-btn:hover{
+  background-color: var(--color-update-hover);
+}
+
+#verify-email-btn{
+  background-color: var(--color-view);
+
+}
+
+#verify-email-btn:hover{
+  background-color: var(--color-view-hover);
+}
 
 @media screen and (max-width:600px) {
 
@@ -313,6 +334,7 @@ textarea {
 .cart-img,
 .order-img {
   width: 22vw;
+  height: 17rem;
 }
 
 .order-card-btn-container button {
@@ -336,6 +358,7 @@ textarea {
 
   .cart-img{
     width: 45vw;
+    height: 9rem;
   }
 
   .order-card .item-details ul li{
@@ -347,6 +370,13 @@ textarea {
 
   .cart-img {
     width: 30vw;
+    height: 9rem;
   }
 
+}
+
+@media screen and (min-width:801px) and (max-width:950px) {
+  .cart-img {
+    height: 10rem;
+  }
 }

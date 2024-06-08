@@ -13,41 +13,24 @@ const instance = new Razorpay({
 })
 
 
+
 //function to place an order by a single logged in user
 const placeOrder = async_handler(async (req, res) => {
     try {
-        let customerId, totalPrice, paymentDone;
-        let { items, address } = req.body;
+        let customerId,  paymentDone;
+        let { items, address, totalPrice } = req.body;
         paymentDone = true;
-        const userId = req.user.id; // will be used as customerId
+        const userId = req.user.id; // will be used as customerId | we need token here
         const user = await User.findById(userId).select("-password");
         if (user) {
             customerId = userId;
-            totalPrice = 0;
-            for (let i = 0; i < items.length; i++) {
-                if (!(items[i].name) || !(items[i].category) || !(items[i].quantity) || !(items[i].variant)) {
-                    res.status(400);
-                    throw new Error("Please enter all the fields");
-                }
-
-                items[i].price = (items[i].variant.price) * (items[i].quantity);
-
-                if (items[i].extraOptions) {
-
-                    for (let j = 0; j < items[i].extraOptions.length; j++) {
-                        items[i].price += (items[i].extraOptions[j].price) * (items[i].quantity);
-
-                    }
-                }
-
-                totalPrice += items[i].price;
-            }
+           
             if (!address) {
                 address = user.address;
             }
             //payment gateway : due
             const options = {
-                amount: 50000,  // amount in the smallest currency unit
+                amount: totalPrice,  
                 currency: "INR",
                 receipt: user.email
             };
@@ -164,7 +147,7 @@ const viewAllOrders = async_handler(async (req, res) => {
         if (user) {
             if (user.isAdmin == true) {
                 orders = await Order.find({});
-            } else {
+            } else if (user.isAdmin == false) {
                 orders = await Order.find({ customerId: userId });
             }
             if (orders) {
@@ -192,10 +175,10 @@ const updateOrderStatus = async_handler(async (req, res) => {
         const orderId = req.params.id;
         const order = await Order.findById(orderId);
         const { status } = req.body;
+        let newOrder = {};
         if (user && user.isAdmin == true) {
-            let newOrder = {};
-            if (typeof status == "number" && status >= 0 && status <= 3) (newOrder.status = status);
-            const updatedOrder = await Order.findByIdAndUpdate(orderId, { $set: newOrder }, { new: true });
+            if (typeof status !== "undefined" || typeof status !== null) { (newOrder.status = status); };
+            const updatedOrder = await Order.findByIdAndUpdate(orderId, { $set: newOrder }, { new: true })
             res.status(201).send(updatedOrder);
         } else {
             res.status(404);

@@ -1,3 +1,32 @@
+#variant-option-container ,.option-check .option{
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem;
+  justify-content: start;
+  align-items: center;
+}
+
+.option-check{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: .55rem;
+  justify-content:flex-start;
+  align-items:flex-start;
+}
+
+#variant-option-container label , .option-check .option label{
+  font-size: .9rem;
+  cursor: pointer;
+}
+
+#variant-option-container select,#variant-option-container option{
+  font-size: 1rem;
+  cursor: pointer;
+
+}
+
+
 .product {
   display: flex;
   flex-wrap: wrap;
@@ -30,6 +59,26 @@
 .product .right .title {
   color: #2879fe;
 }
+
+.product-desc{
+  display: flex;
+  width: 23rem;
+}
+
+@media screen and (max-width:500px){
+  .product-desc{
+    display: flex;
+    width: 8rem;
+  }
+}
+
+@media screen and (max-width:890px){
+  .product-desc{
+    display: flex;
+    width: 18rem;
+  }
+}
+
 
 .product .right .prices {
   display: flex;

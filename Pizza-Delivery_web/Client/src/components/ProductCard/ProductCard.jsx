@@ -1,28 +1,67 @@
 import React from 'react';
 import toppingImg from "../../assets/veg-toppings.jpg";
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-const ProductCard = () => {
+
+
+
+const ProductCard = ({ product, variants, extraOptions }) => {
+  const deleteProduct = async (productId) => {
+
+    try {
+      await axios.delete(`http://localhost:8080/api/product/${productId}/delete`,
+      {
+        headers:{
+          "Content-Type":"application/json",
+          "auth-token":localStorage.getItem("token")
+        }
+      }
+    
+    );
+      alert("Product Deleted successfully!");
+      navigate("/profile_dashboard/view_products")
+    } catch (error) {
+      console.log(error);
+      alert("Something went wrong!");
+    }
+
+  }
   const navigate = useNavigate();
   return (
-    <div className="profile-content" style={{width:"90%",margin:"0 auto"}}>
-        <div className='cart-card'>
+    <div className="profile-content" style={{ width: "90%", margin: "0 auto" }}>
+      <div className='cart-card' style={{ width: "100%" }}>
 
-     <img src={toppingImg} alt="cart-p" className='cart-img' style={{cursor:"pointer"}} onClick={()=>{navigate("/product")}}/>
-     <div className="item-details">
-        <ul type="none" className='poppins-light'>
-            <li>Name : Cheesy Pizza</li>
-            <li>Category : Veg</li>
-            <li>Variant: Full (120rs)</li>
-            <li>Quantity : 4</li>
-            <li>Price : 120</li>
-        </ul>
-     </div>
-      <div className="buttons-container" style={{display:"flex",flexDirection:"column",gap:".5rem"}}>
-        <button className="update-product poppins-medium" title='Update Product'>Update Product&nbsp;&nbsp;<i className="fa-solid fa-pen-to-square"></i></button>
-        <button className="delete-product poppins-medium" title='Delete Product'>Remove From Cart&nbsp;&nbsp;<i className="fa-solid fa-trash-can bin-icon"></i></button>
-      </div>
+        <img src={product.image!==" "?product.image:toppingImg} alt="cart-p" className='cart-img' style={{ cursor: "pointer" }} onClick={() => { navigate(`/${product._id}/product`) }} />
+        <div className="item-details">
+          <ul type="none" className='poppins-light'>
+            <li><span className="poppins-medium">Name : </span> {product.name[0].toUpperCase() + product.name.substring(1)}</li>
+            <li><span className="poppins-medium">Category : </span>{product.category}</li>
+            <hr />
+            {(variants && variants.length !== 0) && <li className='poppins-medium'>Variants : </li>}
+            {variants && variants.map((variant) => (
+              <>
+                <li key={variant._id} ><span className="poppins-medium">{variant.name} : </span>({variant.price}rs)</li>
+              </>
+            ))}
+            <hr />
+            {(extraOptions && extraOptions.length !== 0) && <li className='poppins-medium'>Extra Options : </li>}
+            {
+              extraOptions && extraOptions.map((option) => (
+                <>
+                  <li key={option._id} ><span className="poppins-medium">{option.name} : </span>{option.price}rs</li>
+                </>
+              ))
+            }
+            <li><span className="poppins-medium">Quantity : </span>{product.quantity}</li>
+            <li><span className="poppins-medium price">Price : </span>{product.price}rs</li>
+          </ul>
         </div>
+        <div className="buttons-container" style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}>
+          <button className="update-product poppins-medium" title='Update Product' onClick={() => { navigate(`/profile_dashboard/${product._id}/edit_product`) }}>Update Product&nbsp;&nbsp;<i className="fa-solid fa-pen-to-square"></i></button>
+          <button className="delete-product poppins-medium" title='Delete Product' onClick={() => { deleteProduct(product._id) }} >Delete Product&nbsp;&nbsp;<i className="fa-solid fa-trash-can bin-icon"></i></button>
+        </div>
+      </div>
     </div>
   )
 }

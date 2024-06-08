@@ -1,17 +1,17 @@
 export const variantsArr = [
     {
       id: "Small",
-      name: "Small Size",
+      name: "Small",
       price: 450
     },
     {
       id: "Medium",
-      name: "Medium Size",
+      name: "Medium",
       price: 550
     },
     {
       id: "Full",
-      name: "Full Size",
+      name: "Full",
       price: 750
     },
   ]
@@ -46,3 +46,5 @@ export  const toppingsArr=[
 export const product_types = ["Pizza", "Pizza Crust", "Pizza Sauce", "Pizza Toppings", "Cheese"];
 
 export const categories=["Veg","Non-veg"];
+
+export const orderStatusArr=["Order Placed","In the Kitchen","Out For Delivery","Order Delivered"]

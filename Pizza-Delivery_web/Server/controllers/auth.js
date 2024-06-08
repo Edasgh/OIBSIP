@@ -9,7 +9,7 @@ const bcrypt = require("bcryptjs");
 const registerUser = async_handler(async (req, res) => {
     const { name, email, password, address } = req.body;
 
-    if (!name || !email || (!password && password.length>=8) || !address) {
+    if (!name || !email || (!password && password.length >= 8) || !address) {
         res.status(400);
         throw new Error("Please enter all the fields");
     }
@@ -34,7 +34,7 @@ const registerUser = async_handler(async (req, res) => {
             name: newUser.name,
             email: newUser.email,
             address: newUser.address,
-            success:true
+            success: true
 
         })
 
@@ -56,7 +56,7 @@ const loginUser = async_handler(async (req, res) => {
             email: user.email,
             address: user.address,
             token: generateToken(user._id),
-            success:true
+            success: true
         })
     } else {
         res.status(400);
@@ -89,10 +89,12 @@ const updateUser = async_handler(async (req, res) => {
 
         if (!user) {
             return res.status(404).send({ error: "User not found!" })
-        }
+        } else {
 
-        const updatedUser = await User.findByIdAndUpdate(userId, { $set: newUser }, { new: true });
-        res.status(201).send(updatedUser);
+
+            const updatedUser = await User.findByIdAndUpdate(userId, { $set: newUser }, { new: true });
+            res.status(201).send(updatedUser);
+        }
 
     } catch (error) {
         res.status(401);
@@ -124,5 +126,45 @@ const changePassword = async_handler(async (req, res) => {
 })
 
 
+const forgotPassword = async_handler(async (req, res) => {
+    try {
+        const { password } = req.body; //without token //let user = req.user;
+        const user=req.user;
+        const userId=req.user._id;
+        if (user) {
+            const salt = await bcrypt.genSalt(10);
+            let newPassword = await bcrypt.hash(password, salt);
+            let userPassword = await User.findByIdAndUpdate(userId, { password: newPassword }, { new: true });
+            if (userPassword) {
+                res.status(201).send({ message: "Password changed successfully!" })
+            }
+        } else {
+            res.status(401);
+            throw new Error("Can't find User!");
+        }
 
-module.exports = { registerUser, loginUser, getUser, updateUser, changePassword };
+    } catch (error) {
+        res.status(401);
+        throw new Error("Can't change password");
+    }
+})
+
+const verifyUserEmail=async_handler(async(req,res)=>{
+    try {
+        const {email}=req.body;
+        const userExists=await User.findOne({email:email});
+        if(userExists){
+           res.json({success:true});
+        }else{
+            throw new Error("An unknown error occurred!");
+        }
+
+    } catch (error) {
+        res.status(401);
+        throw new Error("Can't change password");
+    }
+})
+
+
+
+module.exports = { registerUser, loginUser, getUser, updateUser, changePassword,forgotPassword ,verifyUserEmail};
