@@ -14,11 +14,7 @@ const createProduct = async_handler(async (req, res) => {
         if (user.isAdmin == true) {
 
             const { name, product_type, quantity, category, price } = req.body;
-            let { description, variants, image, extraOptions } = req.body;
-
-            if (!extraOptions || extraOptions.length == 0) {
-                extraOptions = [];
-            }
+            let { description, variants, image} = req.body;
 
             if (!variants) {
                 variants = [];
@@ -48,7 +44,6 @@ const createProduct = async_handler(async (req, res) => {
                     name,
                     product_type,
                     variants,
-                    extraOptions,
                     price,
                     quantity,
                     description,
@@ -100,7 +95,7 @@ const updateProduct = async_handler(async (req, res) => {
         const user = await User.findById(userId).select("-password");
 
         if (user.isAdmin == true) {
-            const { name, product_type, variants, extraOptions, price, quantity, description, category, image } = req.body;
+            const { name, product_type, variants,  price, quantity, description, category, image } = req.body;
             const productId = req.params.id;
             const product = await Product.findById(productId);
             if (!product) {
@@ -112,7 +107,6 @@ const updateProduct = async_handler(async (req, res) => {
             if (name) { newProduct.name = name };
             if (product_type) { newProduct.product_type = product_type };
             if (variants) { newProduct.variants = variants };
-            if (extraOptions) { newProduct.extraOptions = extraOptions };
             if (price) { newProduct.price = price };
             if (quantity) { newProduct.quantity = quantity };
             if (description) { newProduct.description = description };

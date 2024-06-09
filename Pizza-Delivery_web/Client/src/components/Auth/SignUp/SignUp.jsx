@@ -21,15 +21,16 @@ const SignUp = () => {
                 address: credentials.address
             }),
         });
-        const json = await response.json();
-        console.log(json);
-        if (json.success) {
-            alert("Signed Up successfully!")
-
-            navigate("/login");
-        } else {
-            alert("Error : An unknown error occurred!")
-
+        if(response.status===400){
+            alert("Error : An unknown error occurred!");
+            window.location.reload();
+        }else{
+            const json = await response.json();
+            if (json.success) {
+                alert("Signed Up successfully!")
+    
+                navigate("/login");
+            }
         }
 
         setCredentials({ name: "", email: "", password: "", address: "" });

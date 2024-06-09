@@ -104,7 +104,7 @@ const ForgotPassword = () => {
 
                     />
 
-                    <button type="button" id="verify-email-btn" onClick={verifyEmail} >
+                    <button type="button" id="verify-email-btn" onClick={verifyEmail} style={{display:emailDisplay}}>
                         Verify Email
                     </button>
 

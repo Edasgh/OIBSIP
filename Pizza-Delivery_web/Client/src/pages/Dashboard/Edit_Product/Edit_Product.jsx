@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from "react-router-dom"
-import { variantsArr, SaucesArr, toppingsArr, product_types, categories } from '../../../data';
+import { variantsArr, product_types, categories } from '../../../data';
 import "../../../AddProduct_EditProduct.css";
 import { getProduct } from '../../../hooks/getProduct';
 import { useSelector } from 'react-redux';
@@ -21,7 +21,6 @@ const Edit_Product = () => {
   const [price, setPrice] = useState(150);
   const [imgLink, setImgLink] = useState(" ");
   const [variants, setVariants] = useState([]);
-  const [extraOptions, setExtraOptions] = useState([]);
   const [Product_type, setProduct_type] = useState(0);
   const [category, setCategory] = useState(categories[0]);
 
@@ -34,7 +33,6 @@ const Edit_Product = () => {
     setCategory(data.category);
     setProduct_type(data.product_type);
     setVariants(data.variants);
-    setExtraOptions(data.extraOptions);
     setQuantity(data.quantity);
     setPrice(data.price);
     setImgLink(data.image);
@@ -63,25 +61,7 @@ const Edit_Product = () => {
   }
 
 
-  let optionsArr = [...extraOptions];
-  let sauces = [...SaucesArr];
-  let toppings = [...toppingsArr];
 
-
-  for (var i = sauces.length - 1; i >= 0; i--) {
-    for (var j = 0; j < optionsArr.length; j++) {
-      if (sauces[i] && (sauces[i].name === optionsArr[j].name)) {
-        sauces.splice(i, 1);
-      }
-    }
-  }
-  for (var i = toppings.length - 1; i >= 0; i--) {
-    for (var j = 0; j < optionsArr.length; j++) {
-      if (toppings[i] && (toppings[i].name === optionsArr[j].name)) {
-        toppings.splice(i, 1);
-      }
-    }
-  }
 
 
 
@@ -108,35 +88,12 @@ const Edit_Product = () => {
 
   }
 
-  const handleDeleteExtraOptions = (option) => {
-
-
-    let arr = new Set([...extraOptions]);
-    arr.delete(option);
-    setExtraOptions(Array.from(arr));
-
-  }
-
-
-  const handleChooseExtraOptions = (e, option) => {
-    if (e.target.checked) {
-      setExtraOptions([...extraOptions, { name: option.name, category: option.category, price: option.price }]);
-
-    } else {
-      extraOptions.pop();
-    }
-
-  }
-
 
   const navigate = useNavigate()
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (product_types[Product_type] !== "Pizza") {
-      setExtraOptions([]);
-    }
     if (product_types[Product_type] !== "Pizza" || product_types[Product_type] == "Pizza Crust") {
       setVariants([])
     }
@@ -146,7 +103,6 @@ const Edit_Product = () => {
         name:name,
         product_type: Product_type,
         variants: [...variants],
-        extraOptions: [...extraOptions],
         price:price,
         quantity:quantity,
         description:description,
@@ -189,7 +145,7 @@ const Edit_Product = () => {
             ))}
           </select>
         </div>
-        {/* Variant & extraoptions */}
+        {/* Variant */}
         {(product_types[Product_type] == "Pizza" || product_types[Product_type] == "Pizza Crust") ? (
           <>
             <hr />
@@ -207,8 +163,6 @@ const Edit_Product = () => {
               </div>
               <br />
               <div className="options-container" >
-
-
                 {mainVarArr.map(variant => (
                   <div className="option" key={variant.id}>
                     <input
@@ -231,65 +185,7 @@ const Edit_Product = () => {
           <hr />
         )}
 
-        {(product_types[Product_type] == "Pizza") ? (
-          <>
-            <hr />
-            <div className='extraOptions-container' >
-              <p className='poppins-medium' style={{ textAlign: "center", color: "var(--text-colora)" }}>Extra Options: </p>
-              <div className="options-container">
-                <p className='poppins-medium' style={{ textAlign: "center", color: "var(--text-colora)" }}>Selected Options: </p>
-                {extraOptions.map(option => (
-                  <div className="option" key={extraOptions.indexOf(option)}>
-                    <span id={`options-${option._id}`}>{option.name}({option.category})</span>
-                    <input type="text" name="option-price" value={`Price : ${option.price}rs`} style={{ padding: ".3rem" }} readOnly />
-                    <button type='button' onClick={() => { handleDeleteExtraOptions(option) }} ><i className="fa-solid fa-xmark"></i></button>
-                  </div>
-                ))}
-              </div>
-              <div className="flex-container" style={{ alignItems: 'flex-start' }}>
-                <div className="options-container" >
-                  <p className='poppins-medium' style={{ textAlign: "center", color: "var(--text-colora)" }}>Sauces: </p>
-
-                  {SaucesArr.map(sauce => (
-                    <div className="option" key={SaucesArr.indexOf(sauce)}>
-                      <input
-                        type="checkbox"
-                        className="sauces-option"
-                        id={`sauces-${SaucesArr.indexOf(sauce)}`}
-                        value={{ name: sauce.name, category: sauce.category, price: sauce.price }}
-                        onChange={(e) => { handleChooseExtraOptions(e, sauce) }}
-                      />
-                      <label htmlFor={`sauces-${SaucesArr.indexOf(sauce)}`}>{sauce.name}({sauce.category})</label>
-                      <input type="text" name="sauce-price" value={`Price : ${sauce.price}rs`} style={{ padding: ".3rem" }} readOnly />
-                    </div>
-                  ))}
-
-                </div>
-                <div className="options-container">
-                  <p className='poppins-medium' style={{ textAlign: "center", color: "var(--text-colora)" }}>Toppings: </p>
-                  {toppingsArr.map(topping => (
-                    <div className="option" key={toppingsArr.indexOf(topping)}>
-                      <input
-                        type="checkbox"
-                        className="sauces-option"
-                        id={`toppings-${toppingsArr.indexOf(topping)}`}
-                        value={{ name: topping.name, category: topping.category, price: topping.price }}
-                        onChange={(e) => { handleChooseExtraOptions(e, topping) }}
-                      />
-                      <label htmlFor={`toppings-${toppingsArr.indexOf(topping)}`}>{topping.name}({topping.category})</label>
-                      <input type="text" name="topping-price" value={`Price : ${topping.price}rs`} style={{ padding: ".3rem" }} readOnly />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </>
-        ) : (
-          <>
-            <hr />
-          </>
-        )}
-
+  
         <div className="option" id='category-option-container'>
           <label htmlFor="category">Product Category : </label>
           <select name="category" id="category" value={category} onChange={(e) => { setCategory(e.target.value) }}>

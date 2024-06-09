@@ -6,7 +6,7 @@ import axios from 'axios';
 
 
 
-const ProductCard = ({ product, variants, extraOptions }) => {
+const ProductCard = ({ product, variants}) => {
   const deleteProduct = async (productId) => {
 
     try {
@@ -38,21 +38,15 @@ const ProductCard = ({ product, variants, extraOptions }) => {
             <li><span className="poppins-medium">Name : </span> {product.name[0].toUpperCase() + product.name.substring(1)}</li>
             <li><span className="poppins-medium">Category : </span>{product.category}</li>
             <hr />
-            {(variants && variants.length !== 0) && <li className='poppins-medium'>Variants : </li>}
-            {variants && variants.map((variant) => (
+            {(variants && variants.length !== 0) && (
               <>
-                <li key={variant._id} ><span className="poppins-medium">{variant.name} : </span>({variant.price}rs)</li>
+              <li className='poppins-medium'>Variants : </li>
+               {variants.map((variant)=>(
+              <li key={variant._id} ><span className="poppins-medium">{variant.name} : </span>({variant.price}rs)</li>
+               ))}
               </>
-            ))}
+              )}
             <hr />
-            {(extraOptions && extraOptions.length !== 0) && <li className='poppins-medium'>Extra Options : </li>}
-            {
-              extraOptions && extraOptions.map((option) => (
-                <>
-                  <li key={option._id} ><span className="poppins-medium">{option.name} : </span>{option.price}rs</li>
-                </>
-              ))
-            }
             <li><span className="poppins-medium">Quantity : </span>{product.quantity}</li>
             <li><span className="poppins-medium price">Price : </span>{product.price}rs</li>
           </ul>

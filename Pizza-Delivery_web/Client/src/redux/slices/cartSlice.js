@@ -47,7 +47,7 @@ export default cartSlice.reducer;
 
 
 //function to fetch products from cart
-export const fetchCartItems=createAsyncThunk("orders/fetch",async()=>{
+export const fetchCartItems=createAsyncThunk("cart/fetch",async()=>{
     const response = await fetch("http://localhost:8080/api/product/cart/getCartItems",{
         method:"GET",
         headers:{

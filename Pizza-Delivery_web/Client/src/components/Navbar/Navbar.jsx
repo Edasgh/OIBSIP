@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { Link } from "react-router-dom";
 import "./Navbar.css";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCartItems } from '../../redux/slices/cartSlice';
 
 const token = localStorage.getItem("token");
 
@@ -63,7 +64,13 @@ const UserMenu = ({ handleClick, display }) => {
 }
 
 const Navbar = () => {
+    const dispatch = useDispatch();
     const {data:products,totalPrice,totalItems,status}=useSelector((state)=>state.cart);
+
+    useEffect(() => {
+        dispatch(fetchCartItems())
+    }, [])
+    
 
     const [toggleMenu, setToggleMenu] = useState(false);
     const [openUserMenu, setOpenUserMenu] = useState(false);

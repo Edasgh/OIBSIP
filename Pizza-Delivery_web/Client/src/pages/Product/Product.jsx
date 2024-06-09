@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./Product.css";
 import { useNavigate, useParams } from "react-router-dom";
-import toppingImg from "../../assets/veg-toppings.jpg";
 import { getProduct } from "../../hooks/getProduct";
 import { categories, product_types } from "../../data";
 import axios from "axios";
 
-
+const token = localStorage.getItem("token");
 
 const Product = () => {
 
@@ -21,7 +20,6 @@ const Product = () => {
   const [imgLink, setImgLink] = useState(" ");
   const [Product_type, setProduct_type] = useState(0);
   const [variants, setVariants] = useState([]);
-  const [extraOptions, setExtraOptions] = useState([]);
   const [category, setCategory] = useState(categories[0]);
 
 
@@ -33,7 +31,6 @@ const Product = () => {
     setCategory(data.category);
     setDescription(data.description);
     setVariants(data.variants);
-    setExtraOptions(data.extraOptions);
     setProduct_type(data.product_type);
     setImgLink(data.image);
 
@@ -50,46 +47,40 @@ const Product = () => {
 
 
   const [variantVal, setVariantVal] = useState(variants[0]);
-  const [optionsVal, setOptionsVal] = useState([]);
 
-  const handleChooseExtraOptions = (e, option) => {
-    if (e.target.checked) {
-      setOptionsVal([...optionsVal, { name: option.name, category: option.category, price: option.price }]);
-
-    } else {
-      optionsVal.pop();
-    }
-
-  }
 
 
 
   const addToCart = async () => {
-    if (Product_type == 0) {
-      try {
-        await axios.post(`http://localhost:8080/api/product/cart/addToCart`, {
-          name,
-          variant: variantVal,
-          extraOptions: [...optionsVal],
-          price,
-          quantity,
-          category,
-          productId:productId
-        },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "auth-token": localStorage.getItem("token")
+    if (token) {
+      if (Product_type == 0) {
+        try {
+          await axios.post(`http://localhost:8080/api/product/cart/addToCart`, {
+            name,
+            variant: variantVal,
+            price,
+            quantity,
+            category:category,
+            productId: productId
+          },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "auth-token": localStorage.getItem("token")
+              }
             }
-          }
 
-        );
-        alert("Item added to cart successfully!");
-        navigate("/profile_dashboard/cart");
-      } catch (error) {
-        console.log(error);
-        alert("Something went wrong!");
+          );
+          alert("Item added to cart successfully!");
+          navigate("/profile_dashboard/cart");
+        } catch (error) {
+          console.log(error);
+          alert("Something went wrong!");
+        }
       }
+    } else {
+      alert("Login to add items to cart!");
+      navigate("/login");
     }
 
 
@@ -101,7 +92,7 @@ const Product = () => {
       <div className="product">
         <div className="left">
           <div className="mainImg">
-            <img src={imgLink !== " " ? imgLink : toppingImg} alt={name} />
+            {(imgLink !== " ") && (<img src={imgLink} alt={name} />)}
           </div>
         </div>
         <div className="right">
@@ -115,32 +106,41 @@ const Product = () => {
           <span className="product-desc description">
             {description.trim().slice(10)}
           </span>
+          {
+            Product_type == 0 && (
 
-          <div className="product-quantity">
-            <button
-              className="minus"
-              onClick={() => setQuantity((prev) => (prev === 1 ? 1 : prev - 1))}
-            >
-              -
-            </button>
-            <span>{quantity}</span>
-            <button
-              className="plus"
-              onClick={() => setQuantity((prev) => prev + 1)}
-            >
-              +
-            </button>
-            {/* prev is the element or parameter of the setQuantity here */}
-          </div>
-          <div className="option" id='variant-option-container'>
-            <label htmlFor="variant">Choose a Variant : </label>
-            <select name="variant" id="variant" value={JSON.stringify({ name: variantVal?.name, price: variantVal?.price })} onChange={(e) => { setVariantVal(JSON.parse(e.target.value)) }} >
-              {variants.map(variant => (
-                <option value={JSON.stringify({ name: variant.name, price: variant.price })} key={`variant-${variants.indexOf(variant)}`}>{variant.name} : ({variant.price}rs)</option>
-              ))}
-            </select>
 
-          </div>
+              <div className="product-quantity">
+                <button
+                  className="minus"
+                  onClick={() => setQuantity((prev) => (prev === 1 ? 1 : prev - 1))}
+                >
+                  -
+                </button>
+                <span>{quantity}</span>
+                <button
+                  className="plus"
+                  onClick={() => setQuantity((prev) => prev + 1)}
+                >
+                  +
+                </button>
+                {/* prev is the element or parameter of the setQuantity here */}
+              </div>
+            )
+          }
+          {Product_type == 0 && (
+
+
+            <div className="option" id='variant-option-container'>
+              <label htmlFor="variant">Choose a Variant : </label>
+              <select name="variant" id="variant" value={JSON.stringify({ name: variantVal?.name, price: variantVal?.price })} onChange={(e) => { setVariantVal(JSON.parse(e.target.value)) }} >
+                {variants.map(variant => (
+                  <option value={JSON.stringify({ name: variant.name, price: variant.price })} key={`variant-${variants.indexOf(variant)}`}>{variant.name} : ({variant.price}rs)</option>
+                ))}
+              </select>
+
+            </div>
+          )}
 
           {Product_type == 0 && (
             <button className="add poppins-semibold" type="button" onClick={addToCart} >
@@ -149,21 +149,7 @@ const Product = () => {
               </p>
             </button>
           )}
-          <div className="option-check">
-            <span id="option">Choose Extra Options : </span>
-            {extraOptions.map(option => (
-              <div className="option" key={extraOptions.indexOf(option)}>
-                <input
-                  type="checkbox"
-                  className="sauces-option"
-                  id={`options-${extraOptions.indexOf(option)}`}
-                  value={{ name: option.name, category: option.category, price: option.price }}
-                  onChange={(e) => { handleChooseExtraOptions(e, option) }}
-                />
-                <label htmlFor={`options-${extraOptions.indexOf(option)}`}>{option.name}({option.category})=-&gt;({option.price}rs)</label>
-              </div>
-            ))}
-          </div>
+
           <div className="info">
             <span>Vendor : PizzaLand</span>
             <span>Product Type : {product_types[Product_type]}</span>

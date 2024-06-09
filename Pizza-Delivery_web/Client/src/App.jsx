@@ -24,6 +24,7 @@ import View_Products from "./pages/Dashboard/View_Products/View_Products";
 import Edit_Details from "./pages/Dashboard/Edit_Details/Edit_Details";
 import Change_password from "./pages/Dashboard/Edit_Details/Change_password";
 import ForgotPassword from "./components/Auth/Login/ForgotPassword";
+import CustomPizza from "./pages/CustomPizza/CustomPizza";
 
 
 const Layout = () => {
@@ -64,6 +65,14 @@ const router = createBrowserRouter([
         element: <Product />
       },
       {
+        path: "/custom_pizza",
+        element: <CustomPizza />
+      },
+      {
+        path: "/signup",
+        element: <SignUp />
+      },
+      {
         path: "/login",
         element: <Login />
       },
@@ -71,10 +80,7 @@ const router = createBrowserRouter([
         path: "/forgot_password",
         element: <ForgotPassword />
       },
-      {
-        path: "/signup",
-        element: <SignUp />
-      },
+     
       {
         path: "/profile_dashboard",
         element: <DashboardLayOut/> ,

@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const cartItemModel = mongoose.Schema({
+    cartId: { type: String, required: true, unique: true },
     customerId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -9,10 +10,9 @@ const cartItemModel = mongoose.Schema({
     productId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product',
-        required: true
     },
     //add to cart only if its pizza
-    name: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
     variant: {
         type:
         {
@@ -20,7 +20,7 @@ const cartItemModel = mongoose.Schema({
             price: { type: Number, required: true },
         },
     },// variant : size
-    extraOptions: {
+    extraOptions: { //for toppings
         type: [
             {
                 name: { type: String, required: true },//extra cheeses or sauces

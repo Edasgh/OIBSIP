@@ -52,7 +52,7 @@ const CartCard = ({ product , link }) => {
   return (
     <div className="profile-content" style={{ width: "90%", margin: "0 auto" }}>
       <div className='cart-card'>
-        <div className="item-details" style={{cursor:"pointer"}}   onClick={()=>{navigate(link)}}>
+        <div className="item-details" style={{cursor:"pointer"}}   onClick={()=>{if(product?.productId){navigate(link)}else{alert("This is a custom pizza");}}}>
           <ul type="none" className='poppins-light'>
             <li>Name : {product.name}</li>
             <li>Category : {product.category}</li>

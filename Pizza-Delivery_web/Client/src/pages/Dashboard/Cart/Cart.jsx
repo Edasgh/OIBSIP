@@ -42,11 +42,11 @@ const Cart = () => {
   return (
   <>
    <div className="profile-header-content">
-    <h2 className="poppins-semibold dashboard-section-title">My Cart (Total {products.length} Item(s) : total price = {totalPrice} rs)</h2>
+    <h2 className="poppins-semibold dashboard-section-title">My Cart (Total {products.length} Item(s) : total price = {totalPrice} rs {totalPrice!==0 && (<span>, total delivery charge = 200</span>)})</h2>
   </div>
   
    {/* props : name,category,variant,quantity,price,removeFromCart */}
-   {products && products.map((product)=>(
+   {products.length!==0 && products.map((product)=>(
     <CartCard 
     key={product._id}
     product={product}

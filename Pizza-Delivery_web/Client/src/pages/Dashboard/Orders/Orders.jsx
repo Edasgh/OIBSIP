@@ -3,6 +3,7 @@ import OrderCard from '../../../components/OrderCard/OrderCard';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchOrders } from '../../../redux/slices/orderSlice';
+import { STATUSES } from '../../../redux/slices/productSlice';
 
 
 
@@ -11,7 +12,7 @@ const token = localStorage.getItem("token");
 const Orders = () => {
   const { data: userDetails } = useSelector((state) => state.user);
 
-  const { data: orders } = useSelector((state) => state.order);
+  const { data: orders , status} = useSelector((state) => state.order);
 
   const dispatch = useDispatch();
 
@@ -20,13 +21,21 @@ const Orders = () => {
   useEffect(() => {
     if (!token) {
       navigate("/login");
+    }else{
+      dispatch(fetchOrders());
     }
   }, []);
 
+  if(status === STATUSES.LOADING){
+    return <h2>Loading ...</h2>
+  }
 
-  useEffect(() => {
-    dispatch(fetchOrders());
-  }, [])
+  if(status === STATUSES.ERROR){
+    return <h2>Something Went Wrong!</h2>
+  }
+
+
+  
 
   return (
     <>
@@ -37,7 +46,7 @@ const Orders = () => {
       {(!orders || orders.length==0) && (
         <p className="poppins-medium" style={{color:"var(--text-colora)",fontSize:"1.4rem"}}>No orders : Order a Product</p>
       )}
-      {orders && orders.map((order) => (
+      {orders && orders.length!==0 && orders.map((order) => (
         <OrderCard key={order._id}
           items={order.items}
           address={order.address}

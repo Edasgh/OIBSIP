@@ -8,6 +8,7 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
         const response = await fetch("http://localhost:8080/api/user/login", {
             method: "POST",
             headers: {
@@ -18,16 +19,23 @@ const Login = () => {
                 password: credentials.password,
             }),
         });
-        const json = await response.json();
-        if (json.success) {
-            localStorage.setItem("token", json.token);
-            alert("Logged in successfully!")
-            navigate("/");
-            window.location.reload();
-        } else {
-            alert("Error : Invalid credentials!")
 
+        if(response.status === 400){
+            alert("Error : Invalid email or password!");
+            window.location.reload();
+           
+        }else{
+            const json = await response.json();
+            if(json.success){
+                localStorage.setItem("token", json.token);
+                alert("Logged in successfully!")
+                navigate("/");
+                window.location.reload();
+            }
         }
+       
+       
+    
     };
 
     const onChange = (e) => {

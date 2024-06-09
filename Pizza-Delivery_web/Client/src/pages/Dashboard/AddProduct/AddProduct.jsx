@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom"
-import { variantsArr, SaucesArr, toppingsArr, product_types, categories } from '../../../data';
+import { variantsArr,product_types, categories } from '../../../data';
 import "../../../AddProduct_EditProduct.css";
 import axios from 'axios';
 
@@ -14,7 +14,6 @@ const AddProduct = () => {
   const [price, setPrice] = useState(null);
   const [imgLink, setImgLink] = useState(" ");
   const [variants, setVariants] = useState([]);
-  const [extraOptions, setExtraOptions] = useState([]);
   const [Product_type, setProduct_type] = useState(0);
   const [category, setCategory] = useState(categories[0]);
 
@@ -37,15 +36,6 @@ const AddProduct = () => {
   }
 
 
-  const handleChooseExtraOptions = (e, option) => {
-    if (e.target.checked) {
-      setExtraOptions([...extraOptions, { name: option.name, category: option.category, price: option.price }]);
-
-    } else {
-      extraOptions.pop();
-    }
-
-  }
 
 
   const navigate = useNavigate()
@@ -53,9 +43,6 @@ const AddProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (product_types[Product_type] !== "Pizza") {
-      setExtraOptions([]);
-    }
     if (product_types[Product_type] !== "Pizza" || product_types[Product_type] !== "Pizza Crust") {
       setVariants([]);
     }
@@ -63,13 +50,12 @@ const AddProduct = () => {
     try {
       await axios.post("http://localhost:8080/api/product/create", {
         name,
-        product_type: Product_type,
+        product_type: Product_type || 0,
         variants: [...variants],
-        extraOptions: [...extraOptions],
         price,
         quantity,
         description,
-        category,
+        category : category || "Veg",
         image:imgLink
       },
         {
@@ -108,7 +94,7 @@ const AddProduct = () => {
             ))}
           </select>
         </div>
-        {/* Variant & extraoptions */}
+        {/* Variant */}
         {(product_types[Product_type] == "Pizza" || product_types[Product_type] == "Pizza Crust") ? (
           <>
             <hr />
@@ -135,54 +121,6 @@ const AddProduct = () => {
           </>
         ) : (
           <hr />
-        )}
-
-        {(product_types[Product_type] == "Pizza") ? (
-          <>
-            <hr />
-            <div className='extraOptions-container' >
-              <p className='poppins-medium' style={{ textAlign: "center", color: "var(--text-colora)" }}>Extra Options: </p>
-              <div className="flex-container" style={{ alignItems: 'flex-start' }}>
-                <div className="options-container" >
-                  <p className='poppins-medium' style={{ textAlign: "center", color: "var(--text-colora)" }}>Sauces: </p>
-                  {SaucesArr.map(sauce => (
-                    <div className="option" key={SaucesArr.indexOf(sauce)}>
-                      <input
-                        type="checkbox"
-                        className="sauces-option"
-                        id={`sauces-${SaucesArr.indexOf(sauce)}`}
-                        value={{ name: sauce.name, category: sauce.category, price: sauce.price }}
-                        onChange={(e) => { handleChooseExtraOptions(e, sauce) }}
-                      />
-                      <label htmlFor={`sauces-${SaucesArr.indexOf(sauce)}`}>{sauce.name}({sauce.category})</label>
-                      <input type="text" name="sauce-price" value={`Price : ${sauce.price}rs`} style={{ padding: ".3rem" }} readOnly />
-                    </div>
-                  ))}
-
-                </div>
-                <div className="options-container">
-                  <p className='poppins-medium' style={{ textAlign: "center", color: "var(--text-colora)" }}>Toppings: </p>
-                  {toppingsArr.map(topping => (
-                    <div className="option" key={toppingsArr.indexOf(topping)}>
-                      <input
-                        type="checkbox"
-                        className="sauces-option"
-                        id={`toppings-${toppingsArr.indexOf(topping)}`}
-                        value={{ name: topping.name, category: topping.category, price: topping.price }}
-                        onChange={(e) => { handleChooseExtraOptions(e, topping) }}
-                      />
-                      <label htmlFor={`toppings-${toppingsArr.indexOf(topping)}`}>{topping.name}({topping.category})</label>
-                      <input type="text" name="sauce-price" value={`Price : ${topping.price}rs`} style={{ padding: ".3rem" }} readOnly />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </>
-        ) : (
-          <>
-            <hr />
-          </>
         )}
 
         <div className="option" id='category-option-container'>
