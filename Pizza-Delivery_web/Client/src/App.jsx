@@ -25,6 +25,9 @@ import Edit_Details from "./pages/Dashboard/Edit_Details/Edit_Details";
 import Change_password from "./pages/Dashboard/Edit_Details/Change_password";
 import ForgotPassword from "./components/Auth/Login/ForgotPassword";
 import CustomPizza from "./pages/CustomPizza/CustomPizza";
+import PaymentSuccess from "./components/paymentSuccess/PaymentSuccess";
+import PaymentFailed from "./components/paymentFailed/PaymentFailed";
+import Notifications from "./pages/Dashboard/Notifications/Notifications";
 
 
 const Layout = () => {
@@ -90,6 +93,10 @@ const router = createBrowserRouter([
             element:<Profile/>
           },
           {
+            path:"/profile_dashboard/notifications",
+            element:<Notifications/>
+          },
+          {
             path:"/profile_dashboard/:userId/edit_details",
             element:<Edit_Details/>
           },
@@ -121,7 +128,15 @@ const router = createBrowserRouter([
       },{
         path:"/change_password",
         element:<Change_password/>
-      }
+      },
+      {
+        path:"/paymentsuccess",
+        element:<PaymentSuccess/>
+      },
+      {
+        path:"/paymentfailure",
+        element:<PaymentFailed/>
+      },
     ],
   },
 ]);

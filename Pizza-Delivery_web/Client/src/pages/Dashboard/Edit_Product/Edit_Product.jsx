@@ -100,14 +100,14 @@ const Edit_Product = () => {
 
     try {
       await axios.put(`http://localhost:8080/api/product/${productId}/update`, {
-        name:name,
+        name: name,
         product_type: Product_type,
         variants: [...variants],
-        price:price,
-        quantity:quantity,
-        description:description,
-        category:category,
-        image:imgLink
+        price: price,
+        quantity: quantity,
+        description: description,
+        category: category,
+        image: imgLink
       },
         {
           headers: {
@@ -139,7 +139,15 @@ const Edit_Product = () => {
         <textarea name="description" id="description" placeholder='Product Description' value={description} onChange={(e) => { setDescription(e.target.value) }} required></textarea>
         <div className="option" id='product_type-option-container'>
           <label htmlFor="product_type">Product Type : </label>
-          <select name="product_type" id="product_type" value={Product_type} onChange={(e) => { setProduct_type(e.target.value) }}>
+          <select name="product_type" id="product_type" value={Product_type} onChange={(e) => {
+            if (e.target.value == 50) {
+              return;
+            } else {
+
+              setProduct_type(e.target.value)
+            }
+          }}>
+            <option value={50}>Choose Product Type</option>
             {product_types.map(product_type => (
               <option value={product_types.indexOf(product_type)} key={`product_type-${product_types.indexOf(product_type)}`} >{product_type}</option>
             ))}
@@ -185,10 +193,20 @@ const Edit_Product = () => {
           <hr />
         )}
 
-  
+
         <div className="option" id='category-option-container'>
           <label htmlFor="category">Product Category : </label>
-          <select name="category" id="category" value={category} onChange={(e) => { setCategory(e.target.value) }}>
+          <select name="category" id="category" value={category}
+            onChange={(e) => {
+              if (e.target.value == "") {
+                return;
+              } else {
+
+                setCategory(e.target.value)
+              }
+
+            }}>
+            <option value={""}>Select a Category</option>
             {categories.map(category => (
               <option value={category} key={`category-${categories.indexOf(category)}`} >{category}</option>
             ))}

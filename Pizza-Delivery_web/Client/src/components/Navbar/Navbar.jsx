@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCartItems } from '../../redux/slices/cartSlice';
@@ -9,7 +9,7 @@ const token = localStorage.getItem("token");
 
 
 const Menu = () => {
- 
+
 
 
     return (
@@ -64,13 +64,17 @@ const UserMenu = ({ handleClick, display }) => {
 }
 
 const Navbar = () => {
+    const navigate = useNavigate()
     const dispatch = useDispatch();
-    const {data:products,totalPrice,totalItems,status}=useSelector((state)=>state.cart);
+    const { data: products, totalPrice, totalItems, status } = useSelector((state) => state.cart);
 
     useEffect(() => {
-        dispatch(fetchCartItems())
+        if (token) {
+
+            dispatch(fetchCartItems())
+        }
     }, [])
-    
+
 
     const [toggleMenu, setToggleMenu] = useState(false);
     const [openUserMenu, setOpenUserMenu] = useState(false);
@@ -94,7 +98,7 @@ const Navbar = () => {
         <div className="navbar">
             <div className="navbar-content">
                 <div className="navbar-logo-container">
-                    <p className='navbar-logo poppins-semibold'>
+                    <p className='navbar-logo poppins-semibold' onClick={() => { navigate("/") }}>
                         <i className="fa-solid fa-pizza-slice pizza-icon"></i> PizzaLand
                     </p>
                 </div>
@@ -105,7 +109,13 @@ const Navbar = () => {
             <div className="navbar-user-actions">
                 <i className="fa-solid fa-circle-user user-icon" onClick={handleOpenUserMenu}></i>
                 <UserMenu display={display} handleClick={() => { setOpenUserMenu(false) }} />
-                <Link to="/profile_dashboard/cart"><i className="fa-solid fa-cart-shopping  cart-icon"></i>({totalItems})</Link>
+                {!token && (
+
+                    <Link to="/login" ><i className="fa-solid fa-cart-shopping  cart-icon"></i></Link>
+                )}
+                {token && (
+                    <Link to="/profile_dashboard/cart"><i className="fa-solid fa-cart-shopping  cart-icon"></i>({totalItems})</Link>
+                )}
             </div>
             <div className="navbar-menu">
                 {toggleMenu ? (
@@ -122,7 +132,16 @@ const Navbar = () => {
                             <div className="navbar-menu_container-links-user-actions">
                                 <i className="fa-solid fa-circle-user user-icon" onClick={handleOpenUserMenu}></i>
                                 <UserMenu display={display} handleClick={() => { setOpenUserMenu(false) }} />
-                                <Link to="/profile_dashboard/cart"><i className="fa-solid fa-cart-shopping  cart-icon"></i>({totalItems})</Link>
+                                {!token && (
+
+                                    <Link to="/login"><i className="fa-solid fa-cart-shopping  cart-icon"></i></Link>
+                                )}
+                                {
+                                    token && (
+
+                                        <Link to="/profile_dashboard/cart"><i className="fa-solid fa-cart-shopping  cart-icon"></i>({totalItems})</Link>
+                                    )
+                                }
                             </div>
                         </div>
                     </div>

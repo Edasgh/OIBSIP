@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom"
-import { variantsArr,product_types, categories } from '../../../data';
+import { variantsArr, product_types, categories } from '../../../data';
 import "../../../AddProduct_EditProduct.css";
 import axios from 'axios';
 
@@ -55,8 +55,8 @@ const AddProduct = () => {
         price,
         quantity,
         description,
-        category : category || "Veg",
-        image:imgLink
+        category: category || "Veg",
+        image: imgLink
       },
         {
           headers: {
@@ -88,7 +88,15 @@ const AddProduct = () => {
         <textarea name="description" id="description" placeholder='Product Description' onChange={(e) => { setDescription(e.target.value) }} required></textarea>
         <div className="option" id='product_type-option-container'>
           <label htmlFor="product_type">Product Type : </label>
-          <select name="product_type" id="product_type" onChange={(e) => { setProduct_type(e.target.value) }}>
+          <select name="product_type" id="product_type"
+            onChange={(e) => {
+              if (e.target.value == 50) {
+                setProduct_type(0);
+              } else {
+                setProduct_type(e.target.value)
+              }
+            }} required>
+            <option value={50} >Choose Product Type</option>
             {product_types.map(product_type => (
               <option value={product_types.indexOf(product_type)} key={`product_type-${product_types.indexOf(product_type)}`} >{product_type}</option>
             ))}
@@ -125,7 +133,15 @@ const AddProduct = () => {
 
         <div className="option" id='category-option-container'>
           <label htmlFor="category">Product Category : </label>
-          <select name="category" id="category" onChange={(e) => { setCategory(e.target.value) }}>
+          <select name="category" id="category" onChange={(e) => {
+            if (e.target.value == "") {
+              return;
+            } else {
+
+              setCategory(e.target.value)
+            }
+          }} required>
+            <option value={""} >Select a Category</option>
             {categories.map(category => (
               <option value={category} key={`category-${categories.indexOf(category)}`} >{category}</option>
             ))}

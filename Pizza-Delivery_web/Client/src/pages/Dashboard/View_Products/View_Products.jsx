@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ProductCard from '../../../components/ProductCard/ProductCard';
 import { useDispatch, useSelector } from "react-redux";
 import { searchProduct_s } from '../../../hooks/getProduct';
-import { fetchProducts } from '../../../redux/slices/productSlice';
+import { STATUSES, fetchProducts } from '../../../redux/slices/productSlice';
 
 
 
@@ -57,17 +57,7 @@ const View_Products = () => {
   const [products, setProducts] = useState([]);
 
 
-
-
-
-
   const searchProducts = async (productType, category) => {
-
-    if (!productType && !category) {
-      const data = await searchProduct_s();
-      setProducts(data);
-    }
-
     if (category) {
       const data = await searchProduct_s(productType, category);
       setProducts(data);
@@ -88,6 +78,14 @@ const View_Products = () => {
     }
 
   }, []);
+
+  if (sts === STATUSES.LOADING) {
+    return <h2>Loading....</h2>;
+  }
+
+  if (sts === STATUSES.ERROR) {
+    return <h2>Something went wrong!</h2>;
+  }
 
 
   return (

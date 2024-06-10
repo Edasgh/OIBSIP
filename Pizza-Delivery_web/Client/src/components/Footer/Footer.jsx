@@ -1,14 +1,15 @@
 import React from 'react';
 import "./Footer.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Footer = () => {
+  const navigate=useNavigate()
   return (
     <>
       <div className="footer">
         <div className='footer-links'>
           <div className='footer-links_main'>
-            <p className='footer-logo logo poppins-bold'>
+            <p className='footer-logo logo poppins-bold' style={{cursor:"pointer"}}  onClick={()=>{navigate("/")}}>
               <i className="fa-solid fa-pizza-slice footer-pizza-icon"></i> PizzaLand
             </p>
             <p>Crechterwoord K12 182 DK Alknjkcb <br /> <br />

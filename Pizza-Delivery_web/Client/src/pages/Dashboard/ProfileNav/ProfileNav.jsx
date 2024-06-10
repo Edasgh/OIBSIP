@@ -43,6 +43,7 @@ const ProfileNav = () => {
             <ul type="none">
 
               <Link to="/profile_dashboard"><li>Profile</li></Link>
+              <Link to="/profile_dashboard/notifications"><li>Notifications</li></Link>
               <Link to="/profile_dashboard/add_product"><li>Create Product</li></Link>
               <Link to="/profile_dashboard/view_products"><li>Products</li></Link>
               <Link to="/profile_dashboard/orders"><li>All Orders</li></Link>
@@ -51,7 +52,7 @@ const ProfileNav = () => {
           </>
         ) : (
           <>
-            <h2>User Account</h2>
+            <h2>My Account</h2>
             <hr />
             <ul type="none">
               <Link to="/profile_dashboard"><li>Profile</li></Link>

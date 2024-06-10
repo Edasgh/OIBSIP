@@ -103,8 +103,8 @@ const Product = () => {
           </div>
 
 
-          <span className="product-desc description">
-            {description.trim().slice(10)}
+          <span className="product-desc description" style={{width:"16rem"}}>
+            {description}
           </span>
           {
             Product_type == 0 && (

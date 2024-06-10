@@ -35,7 +35,6 @@ const Products = () => {
 
   }, [])
 
-  // /api/product?search=spicy pizza
 
   const Categories = [
     {

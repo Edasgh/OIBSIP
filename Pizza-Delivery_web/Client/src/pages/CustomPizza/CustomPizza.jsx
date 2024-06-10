@@ -4,7 +4,7 @@
 //only one cheese
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { fetchCheeses } from '../../redux/slices/cheeseSlice';
 import { searchCrusts, searchVegCrusts } from '../../redux/slices/crustSlice';
 import { searchSauces, searchVegSauces } from '../../redux/slices/sauceSlice';
@@ -15,7 +15,7 @@ import "../../AddProduct_EditProduct.css";
 const token = localStorage.getItem("token");
 
 const CustomPizza = () => {
-const navigate = useNavigate()
+    const navigate = useNavigate()
 
     const dispatch = useDispatch();
     const { data: pizzaCrusts, vegPizzaCrusts, nonVegPizzaCrusts, status } = useSelector((state) => state.crust);
@@ -28,11 +28,11 @@ const navigate = useNavigate()
 
     const [quantity, setQuantity] = useState(1);
     const [variantVal, setVariantVal] = useState({});
-    const [pizzaCrustVal, setPizzaCrustVal] = useState("");
+    const [pizzaCrustVal, setPizzaCrustVal] = useState();
     const [pizzaSauceVal, setPizzaSauceVal] = useState();
     const [pizzaCheeseVal, setPizzaCheeseVal] = useState();
     const [pizzaToppingsVal, setPizzaToppingsVal] = useState([]);
-    const [extraOptions,setExtraOptions]=useState([]);
+    const [extraOptions, setExtraOptions] = useState([]);
 
 
 
@@ -52,49 +52,26 @@ const navigate = useNavigate()
 
     const handleChooseToppings = (e, topping) => {
         if (e.target.checked) {
-            setPizzaToppingsVal([...pizzaToppingsVal, { id:topping._id, name: topping.name, category: topping.category, price: topping.price }]);
+            setPizzaToppingsVal([...pizzaToppingsVal, { id: topping._id, name: topping.name, category: topping.category, price: topping.price }]);
         } else {
             pizzaToppingsVal.pop();
         }
 
-        setExtraOptions([...pizzaToppingsVal,{...pizzaSauceVal},{...pizzaCheeseVal}]);
+        setExtraOptions([...pizzaToppingsVal, { ...pizzaSauceVal }, { ...pizzaCheeseVal }]);
     }
-
-
-    const updateQty = async (productId,productQty) => {
-        try {
-          await axios.put(`http://localhost:8080/api/product/${productId}/update`, {
-            quantity: (productQty-1),
-          },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                "auth-token": localStorage.getItem("token")
-              }
-            }
-    
-          );
-          alert("Updated Quantity successfully!");
-          window.location.reload();
-        } catch (error) {
-          console.log(error);
-          alert("Something went wrong!");
-        }
-    
-      }
 
 
     const addToCart = async (e) => {
         e.preventDefault();
         if (pizzaToppingsVal.length !== 0) {
-            setExtraOptions([...pizzaToppingsVal,{...pizzaSauceVal},{...pizzaCheeseVal}]);
-        if (token) {
+            setExtraOptions([...pizzaToppingsVal, { ...pizzaSauceVal }, { ...pizzaCheeseVal }]);
+            if (token) {
                 try {
-                  const response=  await axios.post(`http://localhost:8080/api/product/cart/addToCart`, {
+                    const response = await axios.post(`http://localhost:8080/api/product/cart/addToCart`, {
                         name: pizzaCrustVal.name,
-                        variant: {...variantVal},
+                        variant: { ...variantVal },
                         price: (pizzaCrustVal.price),
-                        extraOptions:[...extraOptions],
+                        extraOptions: [...extraOptions],
                         quantity: quantity,
                         productId: pizzaCrustVal.id,
                     },
@@ -135,40 +112,92 @@ const navigate = useNavigate()
             >
 
                 <div className="option" id='pizzacrust-option-container'>
-                    <label htmlFor="pizza-crust">Choose Pizza Crust : </label>
-                    <select name="pizza-crust" id="pizza-crust" onChange={(e) => { setPizzaCrustVal(JSON.parse(e.target.value)); setVariants(pizzaCrustVal?.variants) }} required>
+                    <label htmlFor="pizza-crust">Pizza Crust : </label>
+                    <select name="pizza-crust" id="pizza-crust" 
+                    onChange={(e) => {
+                        if (JSON.parse(e.target.value).name) {
+                         setPizzaCrustVal(JSON.parse(e.target.value));
+                        }else{
+                            return;
+                        } 
+                        }} 
+                    required>
+                    <option value={JSON.stringify({})}>Choose a Pizza Crust</option>
                         {pizzaCrusts.length !== 0 && pizzaCrusts.map(crust => (
                             <option value={JSON.stringify({ id: crust._id, name: crust.name, price: crust.price, variants: crust.variants })} key={`crust-${crust._id}`} >{crust.name}</option>
                         ))}
                     </select>
                 </div>
                 <div className="option" id='pizzasauce-option-container'>
-                    <label htmlFor="pizza-sauce">Choose Pizza Sauce : </label>
-                    <select name="pizza-sauce" id="pizza-sauce" onChange={(e) => { setPizzaSauceVal(JSON.parse(e.target.value)) }} required>
+                    <label htmlFor="pizza-sauce">Pizza Sauce : </label>
+                    <select name="pizza-sauce" id="pizza-sauce" 
+                    onChange={(e) => {
+                        if (JSON.parse(e.target.value).name) {
+                         setPizzaSauceVal(JSON.parse(e.target.value)) 
+                        }else{
+                            return;
+                        }
+                        }} 
+                    required>
+                    <option value={JSON.stringify({})}>Choose a Sauce</option>
                         {pizzaSauces.length !== 0 && pizzaSauces.map(sauce => (
-                            <option value={JSON.stringify({id:sauce._id, name: sauce.name, category:sauce.category, price: sauce.price })} key={`sauce-${sauce._id}`} >{sauce.name}</option>
+                            <option value={JSON.stringify({ id: sauce._id, name: sauce.name, category: sauce.category, price: sauce.price })} key={`sauce-${sauce._id}`} >{sauce.name}</option>
                         ))}
                     </select>
                 </div>
                 <div className="option" id='pizzacheese-option-container'>
-                    <label htmlFor="pizza-cheese">Choose Pizza Cheese : </label>
-                    <select name="pizza-cheese" id="pizza-cheese" onChange={(e) => { setPizzaCheeseVal(JSON.parse(e.target.value)) }} required>
+                    <label htmlFor="pizza-cheese">Pizza Cheese : </label>
+                    <select name="pizza-cheese" id="pizza-cheese"
+                        onChange={(e) => {
+                            if (JSON.parse(e.target.value).name) {
+                                setPizzaCheeseVal(JSON.parse(e.target.value))
+                            } else {
+                                return;
+                            }
+                        }}
+                        required>
+                        <option value={JSON.stringify({})}>Choose a Cheese</option>
                         {pizzaCheeses.length !== 0 && pizzaCheeses.map(cheese => (
-                            <option value={JSON.stringify({id:cheese._id, name: cheese.name,category:"Veg", price: cheese.price })} key={`cheese-${cheese._id}`} >{cheese.name}</option>
+                            <option value={JSON.stringify({ id: cheese._id, name: cheese.name, category: "Veg", price: cheese.price })} key={`cheese-${cheese._id}`}>{cheese.name}</option>
                         ))}
                     </select>
                 </div>
 
                 <div className="option" id='variant-option-container'>
-                    <label htmlFor="variant">Choose a Variant : </label>
-                    <select name="variant" id="variant" onChange={(e) => { setVariantVal(JSON.parse(e.target.value)) }} required>
-                        {variants?.length !== 0 && variants?.map(variant => (
-                            <option value={JSON.stringify({ name: variant.name, price: variant.price })} key={`variant-${variant._id}`} >{variant.name} =&gt; ({variant.price}rs)</option>
-                        ))}
-                    </select>
+                    {pizzaCrustVal && pizzaCrustVal?.variants?.length !== 0 ? (
+                        <>
+                            <label htmlFor="variant">Variant : </label>
+                            <select name="variant" id="variant" onChange={(e) => {
+                                if (JSON.parse(e.target.value).name) {
+                                    setVariantVal(JSON.parse(e.target.value))
+                                } else {
+                                    return;
+                                }
+
+                            }} required>
+                                <option value={JSON.stringify({})}>Select a Variant</option>
+                                {pizzaCrustVal?.variants?.map(variant => (
+                                    <option value={JSON.stringify({ name: variant.name, price: variant.price })} key={`variant-${variant._id}`} >{variant.name} =&gt; ({variant.price}rs)</option>
+
+                                ))}
+                            </select>
+                        </>
+                    ) : (
+                        <>
+                            <p className='poppins-medium' style={{ textAlign: "center", color: "blueviolet" }}>Choose a Pizza Crust to view available variants...</p>
+                            <br />
+                        </>
+                    )}
+
                 </div>
 
                 <div className='variants-container' >
+                    <br />
+                    {extraOptions.length == 0 && (
+                        <>
+                            <p className='poppins-medium' style={{ textAlign: "center", color: "var(--color-create-hover)" }}>Choose a Topping...</p>
+                        </>
+                    )}
                     <p className='poppins-medium' style={{ textAlign: "center", color: "var(--text-colora)" }}>Toppings :</p>
                     <div className="options-container" >
                         {pizzaToppings.map(topping => (
@@ -177,7 +206,7 @@ const navigate = useNavigate()
                                     type="checkbox"
                                     className="toppings-option"
                                     id={`topping-${topping._id}`}
-                                    value={{id:topping._id, name: topping.name, category: topping.category, price: topping.price }}
+                                    value={{ id: topping._id, name: topping.name, category: topping.category, price: topping.price }}
                                     onChange={(e) => { handleChooseToppings(e, topping) }}
                                 />
                                 <label htmlFor={`topping-${topping._id}`}>{topping.name}({topping.category})</label>

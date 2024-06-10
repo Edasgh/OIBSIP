@@ -6,6 +6,8 @@ const async_handler = require("express-async-handler");
 const Order = require("../models/Ordermodel");
 const User = require("../models/Usermodel");
 
+const crypto = require("crypto");
+
 const Razorpay = require("razorpay");
 const instance = new Razorpay({
     key_id: process.env.KEY_ID,
@@ -14,35 +16,48 @@ const instance = new Razorpay({
 
 
 
+//create a razorpay order
+const Checkout = async (req, res) => {
+    const options = {
+        amount: Number(req.body.amount * 100),
+        currency: "INR",
+    };
+    const order = await instance.orders.create(options);
+
+    res.status(200).json({
+        success: true,
+        order,
+    });
+};
+
+
+
+
+
+
+
 //function to place an order by a single logged in user
 const placeOrder = async_handler(async (req, res) => {
     try {
-        let customerId,  paymentDone;
-        let { items, address, totalPrice } = req.body;
-        paymentDone = true;
+        let customerId;
+        let { items, address, totalPrice, paymentDone ,razpOrderId,cartId } = req.body;
         const userId = req.user.id; // will be used as customerId | we need token here
         const user = await User.findById(userId).select("-password");
         if (user) {
             customerId = userId;
-           
+
             if (!address) {
                 address = user.address;
             }
-            //payment gateway : due
-            const options = {
-                amount: totalPrice,  
-                currency: "INR",
-                receipt: user.email
-            };
-            let pmt = await instance.orders.create(options)
-            if (pmt.amount == pmt.amount_paid) {
-                paymentDone = true;
-            }
-            if (paymentDone) {
+
+            if (paymentDone == true) {
                 const newOrder = await Order.create({
+                    cartId,
+                    razpOrderId,
                     customerId,
                     items,
                     address,
+                    paymentDone,
                     totalPrice
                 })
 
@@ -54,9 +69,11 @@ const placeOrder = async_handler(async (req, res) => {
                         address: newOrder.address,
                         customerId: newOrder.customerId
                     })
+
                 } else {
                     res.status(400);
                     throw new Error("Failed to place order !");
+
                 }
             } else {
                 res.status(404);
@@ -191,4 +208,4 @@ const updateOrderStatus = async_handler(async (req, res) => {
 })
 
 
-module.exports = { placeOrder, viewOrder, viewAllOrders, deleteOrder, updateOrderStatus };
+module.exports = { Checkout, placeOrder, viewOrder, viewAllOrders, deleteOrder, updateOrderStatus };
