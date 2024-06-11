@@ -33,10 +33,6 @@ const Product = () => {
     setVariants(data.variants);
     setProduct_type(data.product_type);
     setImgLink(data.image);
-
-
-
-
   }
 
   useEffect(() => {
@@ -46,36 +42,41 @@ const Product = () => {
 
 
 
-  const [variantVal, setVariantVal] = useState(variants[0]);
+  const [variantVal, setVariantVal] = useState(null);
 
 
 
 
   const addToCart = async () => {
     if (token) {
-      if (Product_type == 0) {
-        try {
-          await axios.post(`http://localhost:8080/api/product/cart/addToCart`, {
-            name,
-            variant: variantVal,
-            price,
-            quantity,
-            category:category,
-            productId: productId
-          },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                "auth-token": localStorage.getItem("token")
-              }
-            }
+      if (variantVal === null) {
+        alert("Please select a variant")
+      } else {
 
-          );
-          alert("Item added to cart successfully!");
-          navigate("/profile_dashboard/cart");
-        } catch (error) {
-          console.log(error);
-          alert("Something went wrong!");
+        if ((Product_type == 0)) {
+          try {
+            await axios.post(`http://localhost:8080/api/product/cart/addToCart`, {
+              name,
+              variant: variantVal,
+              price,
+              quantity,
+              category: category,
+              productId: productId
+            },
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  "auth-token": localStorage.getItem("token")
+                }
+              }
+
+            );
+            alert("Item added to cart successfully!");
+           navigate("/profile_dashboard/cart");
+          } catch (error) {
+            console.log(error);
+            alert("Something went wrong!");
+          }
         }
       }
     } else {
@@ -103,7 +104,7 @@ const Product = () => {
           </div>
 
 
-          <span className="product-desc description" style={{width:"16rem"}}>
+          <span className="product-desc description" style={{ width: "16rem" }}>
             {description}
           </span>
           {
@@ -133,7 +134,20 @@ const Product = () => {
 
             <div className="option" id='variant-option-container'>
               <label htmlFor="variant">Choose a Variant : </label>
-              <select name="variant" id="variant" value={JSON.stringify({ name: variantVal?.name, price: variantVal?.price })} onChange={(e) => { setVariantVal(JSON.parse(e.target.value)) }} >
+              <select name="variant" id="variant" onChange={(e) => {
+                if (e.target.value == "") {
+                  return;
+                } else {
+
+                  if (JSON.parse(e.target.value).name) {
+                    setVariantVal(JSON.parse(e.target.value))
+                  }
+                }
+
+
+              }} required>
+
+                <option value={""}>Select a Variant</option>
                 {variants.map(variant => (
                   <option value={JSON.stringify({ name: variant.name, price: variant.price })} key={`variant-${variants.indexOf(variant)}`}>{variant.name} : ({variant.price}rs)</option>
                 ))}

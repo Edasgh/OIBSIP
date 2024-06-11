@@ -43,35 +43,49 @@ const AddProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (product_types[Product_type] !== "Pizza" || product_types[Product_type] !== "Pizza Crust") {
-      setVariants([]);
+    if (Product_type === null) {
+      alert("Please Select A Product Type")
     }
 
-    try {
-      await axios.post("http://localhost:8080/api/product/create", {
-        name,
-        product_type: Product_type || 0,
-        variants: [...variants],
-        price,
-        quantity,
-        description,
-        category: category || "Veg",
-        image: imgLink
-      },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "auth-token": localStorage.getItem("token")
+
+    if (category === null) {
+      alert("Please select a category")
+    }
+    if (Product_type !== null || category !== null) {
+      if (product_types[Product_type] !== "Pizza" || product_types[Product_type] !== "Pizza Crust") {
+        setVariants([]);
+      }
+
+
+      try {
+        await axios.post("http://localhost:8080/api/product/create", {
+          name,
+          product_type: Product_type || 0,
+          variants: [...variants],
+          price,
+          quantity,
+          description,
+          category: category || "Veg",
+          image: imgLink
+        },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "auth-token": localStorage.getItem("token")
+            }
           }
-        }
 
-      );
-      alert("Product created successfully!");
-      navigate("/profile_dashboard/view_products");
-    } catch (error) {
-      console.log(error);
-      alert("Something went wrong!");
+        );
+        alert("Product created successfully!");
+        navigate("/profile_dashboard/view_products");
+      } catch (error) {
+        console.log(error);
+        alert("Something went wrong!");
+      }
+
     }
+
+
 
   }
 
@@ -90,13 +104,13 @@ const AddProduct = () => {
           <label htmlFor="product_type">Product Type : </label>
           <select name="product_type" id="product_type"
             onChange={(e) => {
-              if (e.target.value == 50) {
-                setProduct_type(0);
+              if (e.target.value == "") {
+                setProduct_type(null);
               } else {
                 setProduct_type(e.target.value)
               }
             }} required>
-            <option value={50} >Choose Product Type</option>
+            <option value={""} >Choose Product Type</option>
             {product_types.map(product_type => (
               <option value={product_types.indexOf(product_type)} key={`product_type-${product_types.indexOf(product_type)}`} >{product_type}</option>
             ))}
@@ -135,7 +149,7 @@ const AddProduct = () => {
           <label htmlFor="category">Product Category : </label>
           <select name="category" id="category" onChange={(e) => {
             if (e.target.value == "") {
-              return;
+              setCategory(null);
             } else {
 
               setCategory(e.target.value)

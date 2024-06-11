@@ -32,3 +32,16 @@ export const searchProduct_s = async (productType, category) => {
     }
 
 }
+
+export const getAllProductsBelow20=async()=>{
+    /* /getProductsbelow20 */
+    const response = await fetch(`http://localhost:8080/api/product/getProductsbelow20`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application-json",
+            "auth-token":localStorage.getItem("token") //only admin will get
+        }
+    })
+    const data = await response.json();
+    return data;
+}

@@ -45,7 +45,8 @@ a {
 .user-icon,
 .cart-icon,
 .pizza-icon,
-.bin-icon {
+.bin-icon,
+.bell-icon {
   color: var(--color-primary);
   cursor: pointer;
 }
@@ -249,7 +250,7 @@ textarea {
   align-items: start;
 }
 
-.buttons-container button {
+.buttons-container button , .update-qty {
   cursor: pointer;
 
   padding: .4rem .8rem;
@@ -270,12 +271,12 @@ textarea {
 }
 
 
-.change-password {
+.change-password , .update-qty{
   background-color: var(--color-update);
   color: var(--text-colorb);
 }
 
-.change-password:hover {
+.change-password:hover ,.update-qty:hover{
   background-color: var(--color-update-hover);
 }
 
@@ -299,6 +300,71 @@ textarea {
     font-size: .9rem;
     padding: .4rem .3rem;
   }
+}
+
+
+/* Styling the add-todo-modal */
+.modal{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:#0a0b0cba;
+  display: grid;
+  place-items: center;
+  visibility: hidden;
+  z-index: -10;
+}
+
+/* Styling the add-todo-modal-form and its elements */
+.modal-form{  
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+
+  width: 280px;
+  height:300px;
+
+  padding: 1rem;
+  background-color: #FFF7FF;
+  border: 1px solid purple;
+  border-radius: .4rem;
+
+ 
+}
+
+
+
+.modal-form>input,.modal-form>select{
+  width: fit-content;
+  padding: .4rem;
+
+}
+
+.modal-form>select{
+  cursor: pointer;
+}
+
+
+/* Styling the cross-icon */
+.modal  .cross-icon{
+  background-color: white;
+  padding: 1.2rem 1.5rem;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+
+
+
+
+.show{
+  visibility: visible;
+  z-index: 10;
 }
 
 

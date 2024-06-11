@@ -1,13 +1,15 @@
 const express = require("express");
-const { createProduct, updateProduct, deleteProduct, getAllProducts, getSingleProduct, searchProducts} = require("../controllers/product");
+const { createProduct, updateProduct, deleteProduct, getAllProducts, getSingleProduct, searchProducts, getProductsBelow20} = require("../controllers/product");
 const fetchUser = require("../middlewares/fetchUser");
 const { addToCart, removeFromCart, updateItemQuantity, getCartItems } = require("../controllers/cart");
 const router=express.Router();
 
+//product routes
 router.get("/getProducts",searchProducts);
 router.post("/create",fetchUser,createProduct);
 router.put("/:id/update",fetchUser,updateProduct);
 router.delete("/:id/delete",fetchUser,deleteProduct);
+router.get("/getProductsbelow20",fetchUser,getProductsBelow20);
 router.get("/view_products",getAllProducts);
 router.get("/view_products/:id",getSingleProduct);
 

@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCartItems } from '../../redux/slices/cartSlice';
+import { fetchProducts } from '../../redux/slices/productSlice';
 
 const token = localStorage.getItem("token");
 
@@ -18,10 +19,7 @@ const Menu = () => {
                 <Link to="/" >HomePage</Link>
             </p>
             <p>
-                <Link to="/">About Us</Link>
-            </p>
-            <p>
-                <Link to="/">Contact Us</Link>
+                <Link to="/about">About Us</Link>
             </p>
         </>
     );
@@ -68,10 +66,19 @@ const Navbar = () => {
     const dispatch = useDispatch();
     const { data: products, totalPrice, totalItems, status } = useSelector((state) => state.cart);
 
+    const {data:user,sTs}=useSelector((state)=>state.user);
+
+    const { data: items, productsBelow20, sts } = useSelector((state) => state.product);
+
+
     useEffect(() => {
         if (token) {
 
             dispatch(fetchCartItems())
+        }
+
+        if(user.isAdmin==true){
+            dispatch(fetchProducts());
         }
     }, [])
 
@@ -110,11 +117,14 @@ const Navbar = () => {
                 <i className="fa-solid fa-circle-user user-icon" onClick={handleOpenUserMenu}></i>
                 <UserMenu display={display} handleClick={() => { setOpenUserMenu(false) }} />
                 {!token && (
-
                     <Link to="/login" ><i className="fa-solid fa-cart-shopping  cart-icon"></i></Link>
                 )}
                 {token && (
                     <Link to="/profile_dashboard/cart"><i className="fa-solid fa-cart-shopping  cart-icon"></i>({totalItems})</Link>
+                )}
+                {token && user.isAdmin===true && (
+                    <Link to="/profile_dashboard/notifications" >   <i className="fa-solid fa-bell bell-icon" style={{fontSize:"1.3rem"}}></i>{productsBelow20.length!==0 && (<span>({productsBelow20.length})</span>)}</Link>
+                 
                 )}
             </div>
             <div className="navbar-menu">

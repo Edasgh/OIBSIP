@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 import { variantsArr, product_types, categories } from '../../../data';
 import "../../../AddProduct_EditProduct.css";
 import { getProduct } from '../../../hooks/getProduct';
@@ -11,9 +11,14 @@ import axios from 'axios';
 
 const Edit_Product = () => {
 
+  const seachQuery = useSearchParams()[0]
+
+  const quantityQuery = seachQuery.get("quantity");
+
   const { data: user } = useSelector((state) => state.user);
 
   const { productId } = useParams();
+
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState(" ");
@@ -94,35 +99,48 @@ const Edit_Product = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (product_types[Product_type] !== "Pizza" || product_types[Product_type] == "Pizza Crust") {
-      setVariants([])
+    if (Product_type === null) {
+      alert("Please Select A Product Type")
     }
 
-    try {
-      await axios.put(`http://localhost:8080/api/product/${productId}/update`, {
-        name: name,
-        product_type: Product_type,
-        variants: [...variants],
-        price: price,
-        quantity: quantity,
-        description: description,
-        category: category,
-        image: imgLink
-      },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "auth-token": localStorage.getItem("token")
+
+    if (category === null) {
+      alert("Please select a category")
+    }
+
+    if (Product_type !== null || category !== null) {
+      if (product_types[Product_type] !== "Pizza" || product_types[Product_type] == "Pizza Crust") {
+        setVariants([])
+      }
+
+      try {
+        await axios.put(`http://localhost:8080/api/product/${productId}/update`, {
+          name: name,
+          product_type: Product_type,
+          variants: [...variants],
+          price: price,
+          quantity: quantity,
+          description: description,
+          category: category,
+          image: imgLink
+        },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "auth-token": localStorage.getItem("token")
+            }
           }
-        }
 
-      );
-      alert("Product updated successfully!");
-      navigate("/profile_dashboard/view_products");
-    } catch (error) {
-      console.log(error);
-      alert("Something went wrong!");
+        );
+        alert("Product updated successfully!");
+        navigate("/profile_dashboard/view_products");
+      } catch (error) {
+        console.log(error);
+        alert("Something went wrong!");
+      }
     }
+
+
 
   }
 
@@ -130,24 +148,43 @@ const Edit_Product = () => {
 
 
   return (
-    <div style={{ width: "100%" }}>
+    <>
+   
+    {seachQuery && quantityQuery ? (
+      <>
+      <div style={{ width: "100%" }}>
+      <h1 className='poppins-semibold section-title form-title'>Add Product</h1>
+      <form className='form edit_product_form' id="addProduct editProduct"
+        onSubmit={handleSubmit}>
+             <p className='poppins-medium' style={{ textAlign: "center", color: "var(--text-colora)",fontSize: "1.11rem" }}>{name}({product_types[Product_type]})=&gt;{category}</p>
+             <label htmlFor="quantity" className='poppins-semibold' style={{ fontSize: "1.11rem" }}>Product Quantity :</label>
+             <input type="number" name="quantity" id="quantity" placeholder='Product Quantity' value={quantity} onChange={(e) => { setQuantity(e.target.value) }} required min={1} />
+             <button type="submit" id='update-product-btn'>Add Product</button>
+        </form>
+        </div>
+      </>
+    ):(
+      <>
+      <div style={{ width: "100%" }}>
       <h1 className='poppins-semibold section-title form-title'>Edit Product</h1>
-      <form className='form' id="addProduct"
+      <form className='form edit_product_form' id="addProduct"
         onSubmit={handleSubmit}
       >
+        <label htmlFor="name" className='poppins-semibold' style={{ fontSize: "1.11rem" }}>Product Name :</label>
         <input type="text" name="name" id="name" placeholder='Product Name' value={name} onChange={(e) => { setName(e.target.value) }} required />
+        <label htmlFor="description" className='poppins-semibold' style={{ fontSize: "1.11rem" }}>Product Description :</label>
         <textarea name="description" id="description" placeholder='Product Description' value={description} onChange={(e) => { setDescription(e.target.value) }} required></textarea>
         <div className="option" id='product_type-option-container'>
-          <label htmlFor="product_type">Product Type : </label>
+          <label htmlFor="product_type" className='poppins-semibold' style={{ fontSize: "1.11rem" }}>Product Type : </label>
           <select name="product_type" id="product_type" value={Product_type} onChange={(e) => {
-            if (e.target.value == 50) {
-              return;
+            if (e.target.value == "") {
+              setProduct_type(null);
             } else {
 
               setProduct_type(e.target.value)
             }
           }}>
-            <option value={50}>Choose Product Type</option>
+            <option value={""}>Choose Product Type</option>
             {product_types.map(product_type => (
               <option value={product_types.indexOf(product_type)} key={`product_type-${product_types.indexOf(product_type)}`} >{product_type}</option>
             ))}
@@ -158,7 +195,7 @@ const Edit_Product = () => {
           <>
             <hr />
             <div className='variants-container' >
-              <p className='poppins-medium' style={{ textAlign: "center", color: "var(--text-colora)" }}>Variants</p>
+              <p className='poppins-semibold' style={{ textAlign: "center", color: "var(--text-colora)", fontSize: "1.11rem" }} >Variants</p>
               <div className="options-container">
                 <p className='poppins-medium' style={{ textAlign: "center", color: "var(--text-colora)" }}>Selected Variants: </p>
                 {varValues.map(variant => (
@@ -195,11 +232,11 @@ const Edit_Product = () => {
 
 
         <div className="option" id='category-option-container'>
-          <label htmlFor="category">Product Category : </label>
+          <label htmlFor="category" className='poppins-semibold' style={{ fontSize: "1.11rem" }}>Product Category : </label>
           <select name="category" id="category" value={category}
             onChange={(e) => {
               if (e.target.value == "") {
-                return;
+                setCategory(null);
               } else {
 
                 setCategory(e.target.value)
@@ -212,12 +249,20 @@ const Edit_Product = () => {
             ))}
           </select>
         </div>
+        <hr />
+        <label htmlFor="quantity" className='poppins-semibold' style={{ fontSize: "1.11rem" }}>Product Quantity :</label>
         <input type="number" name="quantity" id="quantity" placeholder='Product Quantity' value={quantity} onChange={(e) => { setQuantity(e.target.value) }} required min={1} />
+        <label htmlFor="price" className='poppins-semibold' style={{ fontSize: "1.11rem" }}>Price :</label>
         <input type="number" name="price" id="price" placeholder='$ Price' value={price} onChange={(e) => { setPrice(e.target.value) }} required min={1} />
+        <label htmlFor="imgLink" className='poppins-semibold' style={{ fontSize: "1.11rem" }}>Product Image Link :</label>
         <input type="text" name="imgLink" id="imgLink" placeholder='Product Image Link' value={imgLink} onChange={(e) => { setImgLink(e.target.value) }} />
         <button type="submit" id='update-product-btn'>Edit Product</button>
       </form>
     </div>
+      </>
+    )}
+
+    </>
   )
 }
 

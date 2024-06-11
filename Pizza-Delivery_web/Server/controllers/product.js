@@ -170,6 +170,27 @@ const getAllProducts = async_handler(async (req, res) => {
 })
 
 
+//function to view all items whose quantity is below 20 || only admin can
+const getProductsBelow20=async_handler(async(req,res)=>{
+    try {
+        const userId = req.user.id; //token required
+        const user = await User.findById(userId).select("-password");
+        if (user.isAdmin == true) {
+            const products = await Product.find( { quantity: { $lt: 20 } });
+            res.status(200).send(products);
+        } else {
+            res.status(404);
+            throw new Error("An unknown error occurred!");
+        }
+
+    } catch (error) {
+        res.status(error.status);
+        throw new Error(error);
+    }
+
+})
+
+
 const searchProducts= async_handler(async (req, res) => {
     try {
         const product_type = req.query.productType;
@@ -202,4 +223,4 @@ const getSingleProduct = async_handler(async (req, res) => {
 })
 
 
-module.exports = { getAllProducts, searchProducts, getSingleProduct, createProduct, updateProduct, deleteProduct };
+module.exports = { getAllProducts, searchProducts, getSingleProduct, createProduct, updateProduct, deleteProduct , getProductsBelow20 };

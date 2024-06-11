@@ -5,8 +5,9 @@ const async_handler = require("express-async-handler");
 
 const Order = require("../models/Ordermodel");
 const User = require("../models/Usermodel");
+const Product = require("../models/Productmodel");
+const CartItem = require("../models/cartItemModel");
 
-const crypto = require("crypto");
 
 const Razorpay = require("razorpay");
 const instance = new Razorpay({
@@ -40,7 +41,7 @@ const Checkout = async (req, res) => {
 const placeOrder = async_handler(async (req, res) => {
     try {
         let customerId;
-        let { items, address, totalPrice, paymentDone ,razpOrderId,cartId } = req.body;
+        let { items, address, totalPrice, paymentDone, razpOrderId } = req.body;
         const userId = req.user.id; // will be used as customerId | we need token here
         const user = await User.findById(userId).select("-password");
         if (user) {
@@ -52,7 +53,6 @@ const placeOrder = async_handler(async (req, res) => {
 
             if (paymentDone == true) {
                 const newOrder = await Order.create({
-                    cartId,
                     razpOrderId,
                     customerId,
                     items,
@@ -62,6 +62,16 @@ const placeOrder = async_handler(async (req, res) => {
                 })
 
                 if (newOrder) {
+
+                    for (let i = 0; i < items.length; i++) {
+                        let cartItemId = await items[i].cartId;
+                        const removed = await CartItem.findOneAndDelete({ cartId: cartItemId });
+                        if (!removed) {
+                            res.status(400);
+                            throw new Error("Something went wrong!")
+                        }
+                    }
+
                     res.status(201).json({
                         _id: newOrder._id,
                         items: newOrder.items,
@@ -69,6 +79,8 @@ const placeOrder = async_handler(async (req, res) => {
                         address: newOrder.address,
                         customerId: newOrder.customerId
                     })
+
+
 
                 } else {
                     res.status(400);
@@ -134,11 +146,54 @@ const deleteOrder = async_handler(async (req, res) => {
         const user = await User.findById(userId).select("-password");
         const orderId = req.params.id;
         const order = await Order.findById(orderId);
+
         if (user) {
 
             if (order && order.customerId == userId) {
-                await Order.findOneAndDelete({ _id: orderId });
-                res.status(200).send("Order Deleted Successfully!");
+                let OrderItems;
+                OrderItems = await order.items;
+
+                for (let i = 0; i < OrderItems.length; i++) {
+                    let product_Id = await OrderItems[i].productId;
+                    let product = await Product.findById(product_Id);
+
+                    if (product) {
+
+                        let itemQty = await OrderItems[i].quantity;
+                        let productQty = await product.quantity;
+                        let newProduct = {};
+                        newProduct.quantity = (productQty + itemQty);
+                        const updatedProduct = await Product.findByIdAndUpdate(product_Id, { $set: newProduct }, { new: true });
+                        if (!updatedProduct) {
+                            res.status(400);
+                            throw new Error("Something went wrong!")
+                        }
+                    }
+                    let extraOptions = await OrderItems[i].extraOptions;
+                    if (extraOptions.length !== 0) {
+                        for (let j = 0; j < extraOptions.length; j++) {
+                            let optionName = await OrderItems[i].extraOptions[j].name;
+                            let option = await Product.findOne({ name: optionName });
+                            let optionQty = await option.quantity;
+                            if (option) {
+                                let newPdct = {};
+                                newPdct.quantity = (optionQty + 1);
+                                const updatedPdct = await Product.findOneAndUpdate({ name: optionName }, { $set: newPdct }, { new: true });
+                                if (!updatedPdct) {
+                                    res.status(400);
+                                    throw new Error("Something went wrong!")
+                                }
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                await Order.findByIdAndDelete(orderId);
+                res.status(200).json({ success: "Order Deleted Successfully!" });
+
             } else {
                 res.status(404);
                 throw new Error("Order Not Found!");

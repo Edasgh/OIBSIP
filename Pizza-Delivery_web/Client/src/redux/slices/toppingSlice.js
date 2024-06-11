@@ -7,8 +7,6 @@ const sauceSlice = createSlice({
 
     initialState:{
         data:[],
-        vegToppings:[],
-        nonVegToppings:[],
         status:STATUSES.IDLE
     },
 
@@ -32,35 +30,8 @@ const sauceSlice = createSlice({
         .addCase(searchToppings.rejected,(state,action)=>{
             state.status=STATUSES.ERROR
         })
-        //searchVegSauces
-        .addCase(searchVegToppings.pending,(state,action)=>{
-            state.status=STATUSES.LOADING
-        })
-
-        .addCase(searchVegToppings.fulfilled,(state,action)=>{
-            state.vegToppings=action.payload
-            state.status=STATUSES.IDLE
-            
-        })
-
-        .addCase(searchVegToppings.rejected,(state,action)=>{
-            state.status=STATUSES.ERROR
-        })
-
-        //searchNonVegSauces
-        .addCase(searchNonVegToppings.pending,(state,action)=>{
-            state.status=STATUSES.LOADING
-        })
-
-        .addCase(searchNonVegToppings.fulfilled,(state,action)=>{
-            state.nonVegToppings=action.payload
-            state.status=STATUSES.IDLE
-            
-        })
-
-        .addCase(searchNonVegToppings.rejected,(state,action)=>{
-            state.status=STATUSES.ERROR
-        })
+       
+       
 
     }
 
@@ -77,32 +48,6 @@ export default sauceSlice.reducer;
 export const searchToppings = createAsyncThunk("toppings/fetch",async () => {
 
         const response = await fetch(`http://localhost:8080/api/product/getProducts?productType=3`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application-json"
-            }
-        })
-        const data = await response.json();
-        return data;
-   
-})
-//function to fetch crusts only
-export const searchVegToppings = createAsyncThunk("Vegtoppings/fetch",async () => {
-
-        const response = await fetch(`http://localhost:8080/api/product/getProducts?productType=3&category=Veg`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application-json"
-            }
-        })
-        const data = await response.json();
-        return data;
-   
-})
-//function to fetch crusts only
-export const searchNonVegToppings = createAsyncThunk("NonVegtoppings/fetch",async () => {
-
-    const response = await fetch(`http://localhost:8080/api/product/getProducts?productType=3&category=Non-veg`, {
             method: "GET",
             headers: {
                 "Content-Type": "application-json"

@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const orderModel = mongoose.Schema(
   {
     razpOrderId: { type: String, required: true, unique: true },
-    cartId: { type: String, required: true, unique: true },
     customerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
@@ -12,6 +11,12 @@ const orderModel = mongoose.Schema(
     items: {
       type: [
         {
+          cartId: { type: String, required: true,unique:false},
+          productId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Product',
+            required: true
+          },
           name: { type: String, required: true },
           category: { type: String, required: true }, // veg or non-veg
           variant: {

@@ -28,6 +28,7 @@ import CustomPizza from "./pages/CustomPizza/CustomPizza";
 import PaymentSuccess from "./components/paymentSuccess/PaymentSuccess";
 import PaymentFailed from "./components/paymentFailed/PaymentFailed";
 import Notifications from "./pages/Dashboard/Notifications/Notifications";
+import About from "./pages/About/About";
 
 
 const Layout = () => {
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <Home />
+      },
+      {
+        path: "/about",
+        element: <About />
       },
       {
         path: "/:productId/product",

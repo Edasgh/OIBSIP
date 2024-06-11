@@ -52,7 +52,7 @@ const View_Products = () => {
 
   const navigate = useNavigate();
 
-  const { data: items, sts } = useSelector((state) => state.product);
+  const { data: items,itemsBelow20, sts } = useSelector((state) => state.product);
 
   const [products, setProducts] = useState([]);
 

@@ -7,8 +7,6 @@ const crustSlice = createSlice({
 
     initialState:{
         data:[],
-        vegCrusts:[],
-        nonVegCrusts:[],
         status:STATUSES.IDLE
     },
 
@@ -32,38 +30,10 @@ const crustSlice = createSlice({
         .addCase(searchCrusts.rejected,(state,action)=>{
             state.status=STATUSES.ERROR
         })
-        //veg crusts
-        .addCase(searchVegCrusts.pending,(state,action)=>{
-            state.status=STATUSES.LOADING
-        })
-
-        .addCase(searchVegCrusts.fulfilled,(state,action)=>{
-            state.vegCrusts=action.payload
-            state.status=STATUSES.IDLE
-            
-        })
-
-        .addCase(searchVegCrusts.rejected,(state,action)=>{
-            state.status=STATUSES.ERROR
-        })
-        //non veg crusts
-        .addCase(searchNonVegCrusts.pending,(state,action)=>{
-            state.status=STATUSES.LOADING
-        })
-
-        .addCase(searchNonVegCrusts.fulfilled,(state,action)=>{
-            state.nonVegCrusts=action.payload
-            state.status=STATUSES.IDLE
-            
-        })
-
-        .addCase(searchNonVegCrusts.rejected,(state,action)=>{
-            state.status=STATUSES.ERROR
-        })
+       
 
     }
 
-   
 
 })
 
@@ -85,29 +55,4 @@ export const searchCrusts = createAsyncThunk("crusts/fetch",async () => {
         return data;
    
 })
-//function to fetch crusts only
-export const searchVegCrusts = createAsyncThunk("Vegcrusts/fetch",async () => {
 
-        const response = await fetch(`http://localhost:8080/api/product/getProducts?productType=1&category=Veg`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application-json"
-            }
-        })
-        const data = await response.json();
-        return data;
-   
-})
-//function to fetch crusts only
-export const searchNonVegCrusts = createAsyncThunk("NonVegcrusts/fetch",async () => {
-
-        const response = await fetch(`http://localhost:8080/api/product/getProducts?productType=1&category=Non-veg`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application-json"
-            }
-        })
-        const data = await response.json();
-        return data;
-   
-})

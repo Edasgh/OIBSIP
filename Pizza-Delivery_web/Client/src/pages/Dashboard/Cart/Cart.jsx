@@ -7,6 +7,8 @@ import { fetchCartItems } from '../../../redux/slices/cartSlice';
 import { getUserDetails } from '../../../redux/slices/userSlice';
 import axios from 'axios';
 import Crypto from "crypto-js";
+import OrderAddressModal from '../../../components/OrderModal/OrderAddressModal';
+import { openOrHideModal } from '../../../hooks/OpenOrHideModal';
 
 
 
@@ -14,34 +16,32 @@ const token = localStorage.getItem("token");
 
 const Cart = () => {
 
-  const { data: user, sts } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!token) {
       navigate("/login");
     }
-  }, [])
+  }, []);
 
+
+  const { data: user, sts } = useSelector((state) => state.user);
 
 
   const { data: products, totalPrice, status } = useSelector((state) => state.cart);
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  const [paymentDone, setPaymentDone] = useState(false);
-
-
+  const [address, setAddress] = useState("");
 
   useEffect(() => {
     if (token) {
 
       dispatch(getUserDetails());
       dispatch(fetchCartItems());
+
     }
-
-  }, []);
-
+  }, [])
 
 
 
@@ -53,10 +53,9 @@ const Cart = () => {
     return <h2>Something went wrong!</h2>;
   }
 
-  //razpOrderId, cartId, customerId, items :{name,category,variant,extraOptions,quantity,price},address,totalPrice,paymentDone
 
 
-
+  //razpOrderId, customerId, items :{cartId,name,category,variant,extraOptions,quantity,price},address,totalPrice,paymentDone
 
 
   const checkoutHandler = async () => {
@@ -74,17 +73,62 @@ const Cart = () => {
       currency: "INR",
       name: "PizzaLand",
       description: "Pizza order Checkout",
-      // order_id,
+
       order_id: await order.id,
-      // callback_url: "http://localhost:8080/api/order/verifyPayment",
+
       handler: async function (response) {
         let keySec = await keySecret;
         const string = `${response.razorpay_order_id}|${response.razorpay_payment_id}`
         if (keySecret) {
           const isAuthentic = Crypto.HmacSHA256(string, keySec).toString() === response.razorpay_signature;
           if (isAuthentic) {
-            setPaymentDone(true);
-            navigate(`/paymentsuccess?reference=${response.razorpay_payment_id}`)
+            if (address == "") {
+              try {
+                await axios.post(`http://localhost:8080/api/order/place_order`, {
+                  totalPrice: (totalPrice + 200),
+                  paymentDone: true,
+                  razpOrderId: response.razorpay_order_id,
+                  items: [...products],
+                },
+                  {
+                    headers: {
+                      "Content-Type": "application/json",
+                      "auth-token": localStorage.getItem("token")
+                    }
+                  }
+
+                );
+                alert("Order Placed Successfully!")
+                navigate(`/paymentsuccess?reference=${response.razorpay_payment_id}`);
+              } catch (error) {
+                console.log(error);
+                alert("Something went wrong!");
+              }
+            } else {
+              try {
+                await axios.post(`http://localhost:8080/api/order/place_order`, {
+                  address: address,
+                  totalPrice: (totalPrice + 200),
+                  paymentDone: true,
+                  razpOrderId: response.razorpay_order_id,
+                  items: [...products],
+                },
+                  {
+                    headers: {
+                      "Content-Type": "application/json",
+                      "auth-token": localStorage.getItem("token")
+                    }
+                  }
+
+                );
+                alert("Order Placed Successfully!")
+                navigate(`/paymentsuccess?reference=${response.razorpay_payment_id}`);
+              } catch (error) {
+                console.log(error);
+                alert("Something went wrong!");
+              }
+            }
+
           } else {
             navigate(`/paymentfailure`)
           }
@@ -123,30 +167,41 @@ const Cart = () => {
 
   return (
     <>
-        {token && (
+      {token && (
         <>
-      <div className="profile-header-content">
-        <h2 className="poppins-semibold dashboard-section-title">My Cart (Total {products.length} Item(s) : total price = {totalPrice} rs {totalPrice !== 0 && (<span>, total delivery charge = 200</span>)})</h2>
-      </div>
+          <div className="profile-header-content">
+            <h2 className="poppins-semibold dashboard-section-title">My Cart (Total {products.length} Item(s) : total price = {totalPrice} rs {totalPrice !== 0 && (<span>, total delivery charge = 200</span>)})</h2>
+          </div>
+          {(products.length !== 0 && (
+            <>
 
-  
+              <OrderAddressModal setAddress={setAddress} address={address} />
+              {/* props : name,category,variant,quantity,price,removeFromCart */}
+              {products.map((product) => (
+                <CartCard
+                  key={product._id}
+                  product={product}
+                  link={`/${product.productId}/product`}
+                />
+              ))}
+              {address == "" ? (<>
+                <p className="poppins-medium" style={{ color: "grey" }} >Your Current Address is the address added in your account</p>
+              </>)
+                : (<>
+                  <p className="poppins-medium" style={{ color: "var(--color-primary)" }} >Custom Address added for this order</p>
+                </>)
+              }
+              <ul type="none" className='buttons-container'>
+                <button type="button" className="update-qty poppins-semibold" onClick={() => { openOrHideModal() }}>Add a different Order Address</button>
+                <button className="place-order poppins-semibold" onClick={() => { checkoutHandler() }} >Place Order</button>
+              </ul>
+            </>
 
-          {/* props : name,category,variant,quantity,price,removeFromCart */}
-          {products.length !== 0 && products.map((product) => (
-            <CartCard
-              key={product._id}
-              product={product}
-              link={`/${product.productId}/product`}
-            />
           ))}
+
           {(!products || products.length == 0) && (
             <p className="poppins-medium" style={{ color: "var(--text-colora)", fontSize: "1.4rem" }}>No items : Add a Product to Cart</p>
           )}
-          <ul type="none" className='buttons-container'>
-            {(products.length !== 0) && <button className="place-order poppins-semibold" onClick={() => { checkoutHandler() }} >Place Order</button>}
-
-          </ul>
-
         </>
       )}
 

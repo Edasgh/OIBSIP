@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { orderStatusArr } from '../../data';
+import OrderItem from '../OrderItem/OrderItem';
 
 
 const OrderCard = ({ items, totalPrice, address, isAdmin, orderStatus, order,  userId }) => {
   const customerId = order.customerId;
-  const navigate = useNavigate();
 
   const creationDate = new Date(order.createdAt).toDateString();
   const updationDate = new Date(order.updatedAt).toDateString();
@@ -28,6 +27,7 @@ const OrderCard = ({ items, totalPrice, address, isAdmin, orderStatus, order,  u
     await response.json();
     if (response.status == 200) {
       alert("Order deleted successfully!");
+      window.location.reload();
     } else {
       alert("Something went wrong!")
     }
@@ -58,7 +58,7 @@ const OrderCard = ({ items, totalPrice, address, isAdmin, orderStatus, order,  u
       {isAdmin == true && (
         <>
 
-          <span className="poppins-semibold user" style={{ fontSize: "1.5rem" }}>Ordered By :(userId:{customerId})</span>
+          <span className="poppins-semibold user" style={{ fontSize: "1.2rem"}}>Ordered By : <br/>(userId:{customerId})</span>
           <br />
           <hr />
           <br />
@@ -70,15 +70,7 @@ const OrderCard = ({ items, totalPrice, address, isAdmin, orderStatus, order,  u
       <div className='order-card'>
 
         {items && items.map((item) => (
-          <div className="item-details" onClick={() => { navigate("/product") }} key={item._id}>
-            <ul type="none">
-              <li><span className='poppins-medium'>Name :</span> <span className="poppins-light">{item.name}</span></li>
-              <li><span className='poppins-medium'>Category :</span> <span className="poppins-light">{item.category}</span></li>
-              <li><span className='poppins-medium'>Variant:</span> <span className="poppins-light">{item.variant.name} ({item.variant.price}rs)</span></li>
-              <li><span className='poppins-medium'>Quantity :</span> <span className="poppins-light">{item.quanttity}</span></li>
-              <li><span className='poppins-medium'>Price :</span> <span className="poppins-light">{item.price}</span></li>
-            </ul>
-          </div>
+          <OrderItem key={item._id} item={item} extraOptions={item.extraOptions}/>
         ))}
 
 
