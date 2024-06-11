@@ -12,7 +12,6 @@ const productSlice = createSlice({
 
     initialState: {
         data: [],
-        productsBelow20: [],
         status: STATUSES.IDLE
     },
 
@@ -29,10 +28,6 @@ const productSlice = createSlice({
 
             .addCase(fetchProducts.fulfilled, (state, action) => {
                 state.data = action.payload
-                if (action.payload.length !== 0) {
-
-                    state.productsBelow20 = action.payload.filter(x => x.quantity < 20);
-                }
                 state.status = STATUSES.IDLE
 
             })

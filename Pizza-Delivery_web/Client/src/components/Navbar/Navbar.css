@@ -182,12 +182,15 @@
         top: 1.688rem;
     }
     .navbar-menu_account_container {
-        top: 12.9rem;
-        right: 7rem;
+        top: 8rem;
+        right: 6rem;
     }
 
     .navbar-menu_container-links-user-actions {
         display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: flex-end;
         gap: .8rem;
     }
 

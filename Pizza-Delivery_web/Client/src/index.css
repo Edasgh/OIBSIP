@@ -40,7 +40,35 @@ a {
   color: unset;
   text-decoration: none;
 }
+.navbar-menu_container-links{
+  position: relative;
+}
+.navbar-user-actions a, .navbar-menu_container-links-user-actions a{
+  position: relative;
+}
 
+
+.tooltip{
+  font-size: 1rem;
+  font-weight: 600;
+  padding: .2rem;
+  position: absolute;
+  top: -1.01rem;
+  background-color: var(--color-create);
+  color: var(--text-colorb);
+
+  border: none;
+  border-radius: .22rem;
+}
+
+.navbar-menu_container-links-user-actions a .tooltip{
+  top: 0;
+}
+
+.navbar-menu_container-links-user-actions a .prdct-tooltip{
+  position: absolute;
+  top: -1.01rem;
+}
 
 .user-icon,
 .cart-icon,
@@ -49,6 +77,7 @@ a {
 .bell-icon {
   color: var(--color-primary);
   cursor: pointer;
+  /* margin: 0 .11rem; */
 }
 
 .main-div {

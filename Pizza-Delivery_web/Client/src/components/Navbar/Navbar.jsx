@@ -4,7 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCartItems } from '../../redux/slices/cartSlice';
-import { fetchProducts } from '../../redux/slices/productSlice';
+import { getUserDetails } from '../../redux/slices/userSlice';
+import { fetchProductsBelow20 } from '../../redux/slices/productsBelow20Slice';
 
 const token = localStorage.getItem("token");
 
@@ -66,21 +67,26 @@ const Navbar = () => {
     const dispatch = useDispatch();
     const { data: products, totalPrice, totalItems, status } = useSelector((state) => state.cart);
 
-    const {data:user,sTs}=useSelector((state)=>state.user);
+    const { data: user, sTs } = useSelector((state) => state.user);
 
-    const { data: items, productsBelow20, sts } = useSelector((state) => state.product);
+
+
+    const { data: productsBelow20, sts } = useSelector((state) => state.productsBelow20);
+
 
 
     useEffect(() => {
-        if (token) {
+        if (!token) {
+            navigate("/login")
+        } else {
+            dispatch(getUserDetails());
+            dispatch(fetchCartItems());
+            dispatch(fetchProductsBelow20());
 
-            dispatch(fetchCartItems())
-        }
-
-        if(user.isAdmin==true){
-            dispatch(fetchProducts());
         }
     }, [])
+
+
 
 
     const [toggleMenu, setToggleMenu] = useState(false);
@@ -120,12 +126,17 @@ const Navbar = () => {
                     <Link to="/login" ><i className="fa-solid fa-cart-shopping  cart-icon"></i></Link>
                 )}
                 {token && (
-                    <Link to="/profile_dashboard/cart"><i className="fa-solid fa-cart-shopping  cart-icon"></i>({totalItems})</Link>
+                    <>
+                        <Link to="/profile_dashboard/cart"><i className="fa-solid fa-cart-shopping  cart-icon"></i><span className='tooltip'>{totalItems}</span></Link>
+                        &nbsp;
+                        {user.isAdmin === true && (
+                            <Link to="/profile_dashboard/notifications" >   <i className="fa-solid fa-bell bell-icon" style={{ fontSize: "1.3rem" }}></i>{productsBelow20.length !== 0 && (<span className='tooltip'>{productsBelow20.length}</span>)}</Link>
+
+                        )}
+                    </>
                 )}
-                {token && user.isAdmin===true && (
-                    <Link to="/profile_dashboard/notifications" >   <i className="fa-solid fa-bell bell-icon" style={{fontSize:"1.3rem"}}></i>{productsBelow20.length!==0 && (<span>({productsBelow20.length})</span>)}</Link>
-                 
-                )}
+
+
             </div>
             <div className="navbar-menu">
                 {toggleMenu ? (
@@ -149,9 +160,14 @@ const Navbar = () => {
                                 {
                                     token && (
 
-                                        <Link to="/profile_dashboard/cart"><i className="fa-solid fa-cart-shopping  cart-icon"></i>({totalItems})</Link>
+                                        <Link to="/profile_dashboard/cart"><i className="fa-solid fa-cart-shopping  cart-icon"></i><span className='tooltip'>{totalItems}</span></Link>
                                     )
                                 }
+                                &nbsp;
+                                {token && user.isAdmin === true && (
+                                    <Link to="/profile_dashboard/notifications" >   <i className="fa-solid fa-bell bell-icon" style={{ fontSize: "1.3rem" }}></i>{productsBelow20.length !== 0 && (<span className='tooltip prdct-tooltip'>{productsBelow20.length}</span>)}</Link>
+
+                                )}
                             </div>
                         </div>
                     </div>

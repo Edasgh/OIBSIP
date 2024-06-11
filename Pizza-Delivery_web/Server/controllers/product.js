@@ -14,7 +14,7 @@ const createProduct = async_handler(async (req, res) => {
         if (user.isAdmin == true) {
 
             const { name, product_type, quantity, category, price } = req.body;
-            let { description, variants, image} = req.body;
+            let { description, variants, image } = req.body;
 
             if (!variants) {
                 variants = [];
@@ -95,7 +95,7 @@ const updateProduct = async_handler(async (req, res) => {
         const user = await User.findById(userId).select("-password");
 
         if (user.isAdmin == true) {
-            const { name, product_type, variants,  price, quantity, description, category, image } = req.body;
+            const { name, product_type, variants, price, quantity, description, category, image } = req.body;
             const productId = req.params.id;
             const product = await Product.findById(productId);
             if (!product) {
@@ -171,35 +171,31 @@ const getAllProducts = async_handler(async (req, res) => {
 
 
 //function to view all items whose quantity is below 20 || only admin can
-const getProductsBelow20=async_handler(async(req,res)=>{
-    try {
-        const userId = req.user.id; //token required
-        const user = await User.findById(userId).select("-password");
-        if (user.isAdmin == true) {
-            const products = await Product.find( { quantity: { $lt: 20 } });
-            res.status(200).send(products);
-        } else {
-            res.status(404);
-            throw new Error("An unknown error occurred!");
-        }
+const getProductsBelow20 = async_handler(async (req, res) => {
 
-    } catch (error) {
-        res.status(error.status);
-        throw new Error(error);
+    const userId = req.user.id; //token required
+    const user = await User.findById(userId).select("-password");
+    if (user.isAdmin == true) {
+        const products = await Product.find({ quantity: { $lt: 20 } });
+        res.status(200).send(products);
+    }else{
+        res.status(400);
     }
+
+
 
 })
 
 
-const searchProducts= async_handler(async (req, res) => {
+const searchProducts = async_handler(async (req, res) => {
     try {
         const product_type = req.query.productType;
         const category = req.query.category;
-        if(category){
-        const products = await Product.find({product_type:product_type,category:category});
-        res.status(200).send(products);
-        }else{
-            const products = await Product.find({product_type:product_type});
+        if (category) {
+            const products = await Product.find({ product_type: product_type, category: category });
+            res.status(200).send(products);
+        } else {
+            const products = await Product.find({ product_type: product_type });
             res.status(200).send(products);
         }
     } catch (error) {
@@ -223,4 +219,4 @@ const getSingleProduct = async_handler(async (req, res) => {
 })
 
 
-module.exports = { getAllProducts, searchProducts, getSingleProduct, createProduct, updateProduct, deleteProduct , getProductsBelow20 };
+module.exports = { getAllProducts, searchProducts, getSingleProduct, createProduct, updateProduct, deleteProduct, getProductsBelow20 };

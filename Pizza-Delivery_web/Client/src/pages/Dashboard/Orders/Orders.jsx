@@ -4,13 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchOrders } from '../../../redux/slices/orderSlice';
 import { STATUSES } from '../../../redux/slices/productSlice';
+import { getUserDetails } from '../../../redux/slices/userSlice';
 
 
 
 const token = localStorage.getItem("token");
 
 const Orders = () => {
-  const { data: userDetails } = useSelector((state) => state.user);
+  const { data: userDetails,sts } = useSelector((state) => state.user);
 
   const { data: orders , status} = useSelector((state) => state.order);
 
@@ -22,6 +23,7 @@ const Orders = () => {
     if (!token) {
       navigate("/login");
     }else{
+      dispatch(getUserDetails());
       dispatch(fetchOrders());
     }
   }, []);

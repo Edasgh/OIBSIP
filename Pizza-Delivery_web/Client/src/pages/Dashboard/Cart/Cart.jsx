@@ -25,6 +25,14 @@ const Cart = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (token) {
+      dispatch(getUserDetails());
+      dispatch(fetchCartItems());
+
+    }
+  }, [])
+
 
   const { data: user, sts } = useSelector((state) => state.user);
 
@@ -34,14 +42,7 @@ const Cart = () => {
 
   const [address, setAddress] = useState("");
 
-  useEffect(() => {
-    if (token) {
-
-      dispatch(getUserDetails());
-      dispatch(fetchCartItems());
-
-    }
-  }, [])
+ 
 
 
 

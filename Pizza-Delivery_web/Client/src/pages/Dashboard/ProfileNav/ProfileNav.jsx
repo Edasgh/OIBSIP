@@ -3,33 +3,31 @@ import { Link, useNavigate } from 'react-router-dom';
 import "./ProfileNav.css";
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserDetails } from '../../../redux/slices/userSlice';
-import { STATUSES, fetchProducts } from '../../../redux/slices/productSlice';
-import { getAllProductsBelow20 } from '../../../hooks/getProduct';
+import { STATUSES } from '../../../redux/slices/productSlice';
+import { fetchProductsBelow20 } from '../../../redux/slices/productsBelow20Slice';
 
 const token = localStorage.getItem("token");
 
 const ProfileNav = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { data: user, status } = useSelector((state) => state.user);
 
-
-  const { data: products, productsBelow20, sts } = useSelector((state) => state.product);
-
-
-
-  const navigate = useNavigate();
-  useEffect(() => {
-    dispatch(getUserDetails());
-  }, []);
   useEffect(() => {
     if (!token) {
       navigate("/login")
     } else {
-      if (user.isAdmin == true) {
-        dispatch(fetchProducts());
-      }
+      dispatch(getUserDetails());
     }
   }, [])
+
+  useEffect(() => {
+
+    dispatch(fetchProductsBelow20());
+
+  }, [])
+
+  const { data: productsBelow20, sts } = useSelector((state) => state.productsBelow20);
 
 
 

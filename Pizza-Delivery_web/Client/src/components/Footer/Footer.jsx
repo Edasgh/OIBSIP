@@ -36,14 +36,14 @@ const Footer = () => {
             <p><Link to="#chicken_pizzas">Chicken Pizzas</Link></p>
             <p><Link to="#pizza_crusts">Pizza Crusts</Link></p>
             <p><Link to="#pizza_toppings">Pizza Toppings</Link></p>
-            <p><Link to="#custom_pizza">Customize a Pizza</Link></p>
+            <p><Link to="/custom_pizza">Customize a Pizza</Link></p>
 
 
           </div>
           <div className="footer-links_div">
             <h4>Company</h4>
             <p><Link to="#">Blog</Link></p>
-            <p><Link to="#">About Us</Link></p>
+            <p><Link to="/about">About Us</Link></p>
             <p><Link to="#">Investor</Link></p>
             <p><Link to="#">Feedback</Link></p>
             <p><Link to="#">Ads</Link></p>

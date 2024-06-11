@@ -36,7 +36,12 @@ const Product = () => {
   }
 
   useEffect(() => {
-    getProductDetails();
+    if (!token) {
+      navigate("/login");
+    } else {
+
+      getProductDetails();
+    }
 
   }, []);
 
@@ -72,7 +77,7 @@ const Product = () => {
 
             );
             alert("Item added to cart successfully!");
-           navigate("/profile_dashboard/cart");
+            navigate("/profile_dashboard/cart");
           } catch (error) {
             console.log(error);
             alert("Something went wrong!");
