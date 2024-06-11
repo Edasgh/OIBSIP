@@ -25,7 +25,7 @@ const addToCart = async_handler(async (req, res) => {
 
             if (extraOptions || extraOptions?.length !== 0) {
                 for (let i = 0; i < extraOptions.length; i++) {
-                    let optionId = await extraOptions[i].id;
+                    let optionId = await extraOptions[i].id; //find each product in extra options and decrease their quantity
                     let optionItem = await Product.findById(optionId);
                     if (optionItem) {
                         let optionItemQty = await optionItem.quantity;
@@ -66,7 +66,7 @@ const addToCart = async_handler(async (req, res) => {
 
             const productExits = await Product.findById(productId);
             if (productExits) {
-                if (existsInCart) {
+                if (existsInCart) { //suppose if a product with similar variant is already added to the cart then, increase the quantity
                     let newCartItem = {};
                     let cartItemQty = await existsInCart.quantity;
                     newCartItem.quantity = (cartItemQty + quantity);
@@ -74,7 +74,7 @@ const addToCart = async_handler(async (req, res) => {
 
                     let updatedProduct = {};
                     let productQty = await productExits.quantity;
-                    updatedProduct.quantity = (productQty - quantity);
+                    updatedProduct.quantity = (productQty - quantity); //decrese the product's quantity in product
                     const updatedProductQty = await Product.findOneAndUpdate({ name }, { $set: updatedProduct }, { new: true });
 
                     if (updatedCartItem && updatedProductQty) {

@@ -101,7 +101,7 @@ const updateUser = async_handler(async (req, res) => {
         throw new Error("Can't view user details");
     }
 })
-//function to change password || forgot password  function
+//function to change password || for logged in user
 const changePassword = async_handler(async (req, res) => {
     try {
         const { password } = req.body;
@@ -128,7 +128,7 @@ const changePassword = async_handler(async (req, res) => {
 
 const forgotPassword = async_handler(async (req, res) => {
     try {
-        const { password } = req.body; //without token //let user = req.user;
+        const { password } = req.body; //without token , access via email
         const user=req.user;
         const userId=req.user._id;
         if (user) {
@@ -149,7 +149,7 @@ const forgotPassword = async_handler(async (req, res) => {
     }
 })
 
-const verifyUserEmail=async_handler(async(req,res)=>{
+const verifyUserEmail=async_handler(async(req,res)=>{ //to verify user's email for login and forgot password
     try {
         const {email}=req.body;
         const userExists=await User.findOne({email:email});

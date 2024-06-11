@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getProduct } from "../../hooks/getProduct";
 import { categories, product_types } from "../../data";
 import axios from "axios";
+import toppingImg from "../../assets/veg-toppings.jpg";
 
 const token = localStorage.getItem("token");
 

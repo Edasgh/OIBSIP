@@ -20,7 +20,7 @@ const ProductCard = ({ product, variants}) => {
     
     );
       alert("Product Deleted successfully!");
-      navigate("/profile_dashboard/view_products")
+      window.location.reload();
     } catch (error) {
       console.log(error);
       alert("Something went wrong!");

@@ -8,7 +8,7 @@ const User = require("../models/Usermodel");
 const Product = require("../models/Productmodel");
 const CartItem = require("../models/cartItemModel");
 
-
+//for payment with razorpay
 const Razorpay = require("razorpay");
 const instance = new Razorpay({
     key_id: process.env.KEY_ID,
@@ -30,8 +30,6 @@ const Checkout = async (req, res) => {
         order,
     });
 };
-
-
 
 
 
@@ -64,7 +62,7 @@ const placeOrder = async_handler(async (req, res) => {
                 if (newOrder) {
 
                     for (let i = 0; i < items.length; i++) {
-                        let cartItemId = await items[i].cartId;
+                        let cartItemId = await items[i].cartId; //find each item in cart and delete them from cart as order is already placed
                         const removed = await CartItem.findOneAndDelete({ cartId: cartItemId });
                         if (!removed) {
                             res.status(400);
@@ -155,7 +153,7 @@ const deleteOrder = async_handler(async (req, res) => {
 
                 for (let i = 0; i < OrderItems.length; i++) {
                     let product_Id = await OrderItems[i].productId;
-                    let product = await Product.findById(product_Id);
+                    let product = await Product.findById(product_Id);//find the order items in product and then increase their quantity by the ordered quantity
 
                     if (product) {
 
@@ -170,7 +168,7 @@ const deleteOrder = async_handler(async (req, res) => {
                         }
                     }
                     let extraOptions = await OrderItems[i].extraOptions;
-                    if (extraOptions.length !== 0) {
+                    if (extraOptions.length !== 0) { //if the order item had extraoptions then find them too in product and increase their quantity by 1
                         for (let j = 0; j < extraOptions.length; j++) {
                             let optionName = await OrderItems[i].extraOptions[j].name;
                             let option = await Product.findOne({ name: optionName });
@@ -239,7 +237,7 @@ const viewAllOrders = async_handler(async (req, res) => {
     }
 })
 
-//update order status : only by admin
+//update order status (order placed or in the kitchen or delivered) : only by admin
 const updateOrderStatus = async_handler(async (req, res) => {
     try {
         const userId = req.user.id;
