@@ -69,7 +69,7 @@ const CustomPizza = () => {
                         name: pizzaCrustVal.name,
                         variant: { ...variantVal },
                         price: (pizzaCrustVal.price),
-                        extraOptions: [...extraOptions],
+                        extraOptions:[...pizzaToppingsVal, { ...pizzaSauceVal }, { ...pizzaCheeseVal }],
                         quantity: quantity,
                         productId: pizzaCrustVal.id,
                     },

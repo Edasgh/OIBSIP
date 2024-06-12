@@ -188,6 +188,34 @@ const updateItemQuantity = async_handler(async (req, res) => {
 
             };
 
+            if (cartItem.extraOptions.length !== 0) { //if items have any extraoptions, update their quantity too
+                for (let i = 0; i < cartItem.extraOptions.length; i++) {
+                    let newOptnItem = {};
+                    let optionId = await cartItem.extraOptions[i].id;
+                    let option = await Product.findById(optionId);
+                    if (option) {
+
+                        let optionQty = option.quantity;
+                        if (quantity > cartItemQty) {
+                            increment_decrement = quantity - cartItemQty;
+                            newOptnItem.quantity = (optionQty - increment_decrement);
+                        } else if (cartItemQty > quantity) {
+                            increment_decrement = cartItemQty - quantity;
+                            newOptnItem.quantity = (optionQty + increment_decrement);
+                        }
+
+
+                        let updatedOptnItem = await Product.findByIdAndUpdate(optionId, { $set: newOptnItem }, { new: true });
+                        if (!updatedOptnItem) {
+                            res.status(404);
+                            throw new Error("Something went wrong!");
+                        }
+                    }
+
+                }
+            }
+
+
             const updatedCartItem = await CartItem.findByIdAndUpdate(cartItemId, { $set: newCartItem }, { new: true });
             const updatedProduct = await Product.findOneAndUpdate({ name: cartItemName }, { $set: newProduct }, { new: true });
             if (updatedCartItem && updatedProduct) {
@@ -225,8 +253,31 @@ const removeFromCart = async_handler(async (req, res) => {
         newProduct.quantity = productQty + cartItemQty;
 
 
+
+
         if (user && cartItem) {
             if (userId == cartItem.customerId) {
+
+                if (cartItem.extraOptions.length !== 0) { //if items have any extraoptions, update their quantity too
+                    for (let i = 0; i < cartItem.extraOptions.length; i++) {
+                        let newOptnItem = {};
+                        let optionId = await cartItem.extraOptions[i].id;
+                        let option = await Product.findById(optionId);
+                        if (option) {
+
+                            let optionQty = option.quantity;
+                            newOptnItem.quantity = optionQty + cartItemQty;
+
+
+                            let updatedOptnItem = await Product.findByIdAndUpdate(optionId, { $set: newOptnItem }, { new: true });
+                            if (!updatedOptnItem) {
+                                res.status(404);
+                                throw new Error("Something went wrong!");
+                            }
+                        }
+
+                    }
+                }
                 await Product.findOneAndUpdate({ name: cartItemName }, { $set: newProduct }, { new: true });
                 await CartItem.findOneAndDelete({ _id: cartItemId });
                 res.status(200).send("Item removed from cart Successfully!");

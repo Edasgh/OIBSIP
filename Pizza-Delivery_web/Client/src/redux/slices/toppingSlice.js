@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { STATUSES } from "./productSlice";
 
 
-const sauceSlice = createSlice({
+const toppingSlice = createSlice({
     name:"topping",
 
     initialState:{
@@ -39,9 +39,9 @@ const sauceSlice = createSlice({
 
 })
 
-export const {extraReducers} = sauceSlice.actions; // extraReducers are actions here
+export const {extraReducers} = toppingSlice.actions; // extraReducers are actions here
 
-export default sauceSlice.reducer;
+export default toppingSlice.reducer;
 
 
 //function to fetch crusts only

@@ -23,6 +23,11 @@ const cartItemModel = mongoose.Schema({
     extraOptions: { //for toppings
         type: [
             {
+                id: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'User',
+                    required: true
+                },
                 name: { type: String, required: true },//extra cheeses or sauces
                 price: { type: Number, required: true },
                 category: { type: String, required: true }
